@@ -1,0 +1,76 @@
+{
+	"name": "@metacoin/browser-extensionizer",
+	"version": "0.2.0",
+	"description": "Metacoin browser extension",
+	"main": "dist/index.js",
+	"files": [
+		"dist/"
+	],
+	"scripts": {
+		"build": "tsc",
+		"build:watch": "yarn build && tsc -w",
+		"build:link": "yarn build && cd dist && yarn link && rm -rf node_modules && cd ..",
+		"lint": "eslint . --ext ts",
+		"lint:fix": "eslint . --ext ts --fix",
+		"doc": "typedoc src/"
+	},
+	"keywords": [
+		"Metacoin",
+		"Browser",
+		"Extension"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MetacoinPlatform/browser-extensionizer.git"
+	},
+	"engines": {
+		"node": ">=12",
+		"yarn": "^1.16.0"
+	},
+	"eslintConfig": {
+		"root": true,
+		"env": {
+			"es6": true,
+			"node": true,
+			"browser": true,
+			"webextensions": true
+		},
+		"extends": [
+			"eslint:recommended",
+			"plugin:@typescript-eslint/eslint-recommended"
+		],
+		"parserOptions": {
+			"ecmaVersion": 2018,
+			"parser": "@typescript-eslint/parser",
+			"sourceType": "module",
+			"plugins": [
+				"@typescript-eslint"
+			]
+		},
+		"rules": {
+			"no-unused-vars": [
+				"warn",
+				{
+					"vars": "all"
+				}
+			]
+		}
+	},
+	"author": "Inblock",
+	"license": "GPL3.0",
+	"dependencies": {
+		"ec-key": "^0.0.4"
+	},
+	"devDependencies": {
+		"@types/chrome": "^0.0.128",
+		"@types/node": "^14.14.21",
+		"@typescript-eslint/eslint-plugin": "^4.11.0",
+		"@typescript-eslint/parser": "^4.11.0",
+		"babel-eslint": "^10.1.0",
+		"babel-loader": "^8.1.0",
+		"eslint": "^7.11.0",
+		"ts-node": "^9.1.1",
+		"typedoc": "^0.19.2",
+		"typescript": "^4.1.3"
+	}
+}
