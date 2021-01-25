@@ -34,4 +34,4 @@ const BrowserEvt: iBrowserEvt = {
 	storage,
 }
 
-export default BrowserEvt
+module.exports = BrowserEvt
