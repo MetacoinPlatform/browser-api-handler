@@ -1,31 +1,31 @@
-import {ENUM_STATUS} from '../Lib/Enum'
-import {createResult, makeid} from '../Lib/Func'
+import { ENUM_STATUS } from '../Lib/Enum'
+import { createResult, makeid } from '../Lib/Func'
 
-export interface iAlarms {
+interface iAlarms {
 	create(name: string, options: chrome.alarms.AlarmCreateInfo)
 	addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void)
 	removeListener(name: string, id: string)
 	removeListeners(name: string)
-	clear(name: string): void
+	clear(name: string)
 }
 
 /**
  * @type/chrome.alarms
  */
-export class alarms implements iAlarms {
-	static instance: alarms
+export class Alarms implements iAlarms {
+	static instance: Alarms
 
 	private alarm: typeof chrome.alarms | null
-	private eventMap: {[name: string]: {[key: string]: (id: string, alarm: chrome.alarms.Alarm) => void}}
+	private eventMap: { [name: string]: { [key: string]: (id: string, alarm: chrome.alarms.Alarm) => void } }
 	constructor() {
-		if (!alarms.instance) {
+		if (!Alarms.instance) {
 			this.alarm = chrome.alarms || null
 			this.eventMap = {}
 
-			alarms.instance = this
+			Alarms.instance = this
 		}
 
-		return alarms.instance
+		return Alarms.instance
 	}
 
 	/**
@@ -39,7 +39,7 @@ export class alarms implements iAlarms {
 	 * 
 	 * @return this
 	 */
-	create(name: string, options: chrome.alarms.AlarmCreateInfo) {
+	create(name: string, options: chrome.alarms.AlarmCreateInfo): Alarms {
 		if (!this.alarm) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.alarm.')
 		} else if (!name || !name.trim()) {
@@ -60,13 +60,13 @@ export class alarms implements iAlarms {
 	 * 
 	 * @return this
 	 */
-	addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void) {
+	addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void): Alarms {
 		if (!this.alarm) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.alarm.')
 		} else if (!name || !name.trim()) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found alarm name.')
 		}
-		
+
 		let id = makeid(5)
 		if (!this.eventMap[name]) {
 			this.eventMap[name] = {}
@@ -95,7 +95,7 @@ export class alarms implements iAlarms {
 	 * @param name Alarm을 이 Alarm을 식별하기위한 이름입니다. Create로 생성시 사용한 이름을 입력해주세요.
 	 * @param id Alarm addListener시 생성된 ID값
 	 */
-	removeListener(name: string, id: string) {
+	removeListener(name: string, id: string): Alarms {
 		if (!this.alarm) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.alarm.')
 		} else if (!name || !name.trim()) {
@@ -118,7 +118,7 @@ export class alarms implements iAlarms {
 	 * 
 	 * @param name Alarm을 이 Alarm을 식별하기위한 이름입니다. Create로 생성시 사용한 이름을 입력해주세요.
 	 */
-	removeListeners(name: string) {
+	removeListeners(name: string): Alarms {
 		if (!this.alarm) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.alarm.')
 		} else if (!name || !name.trim()) {
@@ -147,7 +147,7 @@ export class alarms implements iAlarms {
 	 * 
 	 * @param name Alarm을 이 Alarm을 식별하기위한 이름입니다. Create로 생성시 사용한 이름을 입력해주세요.
 	 */
-	clear(name: string) {
+	clear(name: string): Alarms {
 		if (!this.alarm) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.alarm.')
 		} else if (!name || !name.trim()) {
@@ -163,14 +163,14 @@ export class alarms implements iAlarms {
 	/**
 	 * 등록되어 있는 모든 알람을 제거합니다.
 	 */
-	clearAll() {
+	clearAll(): Alarms {
 		if (!this.alarm) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.alarm.')
 		}
 
 		let eventKeys = Object.keys(this.eventMap) || []
 		if (eventKeys.length > 0) {
-			for(let name of eventKeys) {
+			for (let name of eventKeys) {
 				this.clear(name)
 			}
 		}
@@ -181,4 +181,4 @@ export class alarms implements iAlarms {
 	}
 }
 
-export default new alarms()
+export default new Alarms()

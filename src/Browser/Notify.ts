@@ -1,7 +1,7 @@
-import {ENUM_STATUS} from '../Lib/Enum'
-import {createResult} from '../Lib/Func'
+import { ENUM_STATUS } from '../Lib/Enum'
+import { createResult } from '../Lib/Func'
 
-export interface iNotify {
+interface iNotify {
 	setOptions(id: string, options?: chrome.notifications.NotificationOptions)
 	onClicked(id: string, callback: (notificationId: string) => void)
 	removeClicked(id: string)
@@ -28,21 +28,21 @@ interface iNotifyOption {
 /**
  * @type/chrome.notifications
  */
-export class notify implements iNotify {
-	static instance: notify
+export class Notify implements iNotify {
+	static instance: Notify
 
 	private notify: typeof chrome.notifications
-	private notifyMap: {[name: string]: iNotifyOption}
+	private notifyMap: { [name: string]: iNotifyOption }
 
 	constructor() {
-		if (!notify.instance) {
+		if (!Notify.instance) {
 			this.notify = chrome.notifications
 			this.notifyMap = {}
 
-			notify.instance = this
+			Notify.instance = this
 		}
 
-		return notify.instance
+		return Notify.instance
 	}
 
 	private setupNotifyOption(id: string) {
@@ -64,7 +64,7 @@ export class notify implements iNotify {
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param options https://developer.chrome.com/docs/extensions/reference/notifications/#type-NotificationOptions 를 참조하세요.
 	 */
-	setOptions(id: string, options: chrome.notifications.NotificationOptions = {}) {
+	setOptions(id: string, options: chrome.notifications.NotificationOptions = {}): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		}
@@ -86,7 +86,7 @@ export class notify implements iNotify {
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 ID를 반환합니다.
 	 */
-	onClicked(id: string, callback: (notificationId: string) => void) {
+	onClicked(id: string, callback: (notificationId: string) => void): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		}
@@ -115,7 +115,7 @@ export class notify implements iNotify {
 	 * 
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
-	removeClicked(id: string) {
+	removeClicked(id: string): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		} else if (!this.notifyMap[id]) {
@@ -137,7 +137,7 @@ export class notify implements iNotify {
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 ID 및 사용자에 의해 닫힌 여부를 반환합니다.
 	 */
-	onClosed(id: string, callback: (notificationId: string, byUser: boolean) => void) {
+	onClosed(id: string, callback: (notificationId: string, byUser: boolean) => void): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		}
@@ -165,7 +165,7 @@ export class notify implements iNotify {
 	 * 
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
-	removeClosed(id: string) {
+	removeClosed(id: string): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		} else if (!this.notifyMap[id]) {
@@ -187,7 +187,7 @@ export class notify implements iNotify {
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 ID 및 누른 버튼의 Index를 반환합니다.
 	 */
-	onButtonClicked(id: string, callback: (notificationId: string, buttonIndex: number) => void) {
+	onButtonClicked(id: string, callback: (notificationId: string, buttonIndex: number) => void): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		}
@@ -215,7 +215,7 @@ export class notify implements iNotify {
 	 * 
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
-	removeButtonClicked(id: string) {
+	removeButtonClicked(id: string): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		} else if (!this.notifyMap[id]) {
@@ -237,7 +237,7 @@ export class notify implements iNotify {
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 권한 레벨을 반환합니다.
 	 */
-	onPermissionChanged(id: string, callback: (level: string) => void) {
+	onPermissionChanged(id: string, callback: (level: string) => void): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		}
@@ -262,7 +262,7 @@ export class notify implements iNotify {
 	 * 
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
-	removePermissionChanged(id: string) {
+	removePermissionChanged(id: string): Notify {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		} else if (!this.notifyMap[id]) {
@@ -345,4 +345,4 @@ export class notify implements iNotify {
 	}
 }
 
-export default new notify()
+export default new Notify()

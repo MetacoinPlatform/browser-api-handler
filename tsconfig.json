@@ -6,20 +6,24 @@
 		"experimentalDecorators": true,
 		"importHelpers": true,
 		"moduleResolution": "Node",
-		"noImplicitAny": false,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+        "noImplicitAny": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
 		"outDir": "dist",
-		"preserveConstEnums": true,
 		"removeComments": true,
-		"sourceMap": true,
-		"inlineSources": true,
+        "sourceMap": true,
+        "inlineSources": true,
 		"strict": true,
 		"strictPropertyInitialization": false,
-		"module": "es6",
+        "module": "es6",
 		"target": "es5",
-		"typeRoots": ["./node_modules/@types"],
-		"lib": ["DOM", "ES2016"]
+		"typeRoots": [
+			"./node_modules/@types"
+		],
+		"lib": [
+			"DOM",
+			"ES2016"
+		]
 	},
 	"typedocOptions": {
 		"includeVersion": true,
@@ -27,8 +31,16 @@
 		"hideGenerator": true,
 		"out": "docs",
 		"theme": "markdown",
-		"entryPoints": ["./src/"]
+		"entryPoints": [
+			"./src/"
+		]
 	},
-	"include": ["./src/*.ts", "./src/**/*.ts"],
-	"exclude": ["dist", "./node_modules"]
+	"include": [
+		"./src/*.ts",
+		"./src/**/*.ts"
+	],
+	"exclude": [
+		"dist",
+		"./node_modules"
+	]
 }

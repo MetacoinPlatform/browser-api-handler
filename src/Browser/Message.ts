@@ -1,5 +1,5 @@
-import {ENUM_STATUS} from '../Lib/Enum'
-import {makeid, encryptValue, decryptValue} from '../Lib/Func'
+import { ENUM_STATUS } from '../Lib/Enum'
+import { makeid, encryptValue, decryptValue } from '../Lib/Func'
 
 interface iOnCallbackFunction {
 	method: string | null
@@ -7,9 +7,9 @@ interface iOnCallbackFunction {
 	sendResult: (result: ENUM_STATUS, msg: any, data: any) => any
 }
 
-type onCallbackFunction = (data: iOnCallbackFunction & {oriParam: any; sender: chrome.runtime.MessageSender}) => void
+type onCallbackFunction = (data: iOnCallbackFunction & { oriParam: any; sender: chrome.runtime.MessageSender }) => void
 
-export interface iMessage {
+interface iMessage {
 	send(method: string, param?: any, isEncrypt?: boolean): Promise<any>
 	sendTab(tabId: number, method: string, param?: any, isEncrypt?: boolean): Promise<any>
 
@@ -17,21 +17,21 @@ export interface iMessage {
 	onExternal(callback: onCallbackFunction, extId?: string): object | null
 }
 
-export class message implements iMessage {
-	static instance: message
+export class Message implements iMessage {
+	static instance: Message
 
 	private runtime: typeof chrome.runtime | null
 	private tabs: typeof chrome.tabs | null
 
 	constructor() {
-		if (!message.instance) {
+		if (!Message.instance) {
 			this.runtime = chrome.runtime || null
 			this.tabs = chrome.tabs || null
 
-			message.instance = this
+			Message.instance = this
 		}
 
-		return message.instance
+		return Message.instance
 	}
 
 	/**
@@ -271,4 +271,4 @@ export class message implements iMessage {
 	}
 }
 
-export default new message()
+export default new Message()

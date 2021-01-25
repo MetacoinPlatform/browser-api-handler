@@ -1,7 +1,7 @@
-import {EventEmitter} from 'events'
-import {ENUM_STORAGE, ENUM_TYPE} from '../Lib/Enum'
+import { EventEmitter } from 'events'
+import { ENUM_STORAGE, ENUM_TYPE } from '../Lib/Enum'
 
-export interface iStorage {
+interface iStorage {
 	changeType(type: ENUM_STORAGE): iStorage
 
 	save(key: string | number, val: any): Promise<void>
@@ -17,7 +17,7 @@ export interface iStorage {
  */
 
 let isAddListener: boolean = false
-class Storage extends EventEmitter implements iStorage, EventEmitter {
+export class Storage extends EventEmitter implements iStorage, EventEmitter {
 	static instance: Storage
 
 	private storageType: ENUM_TYPE
@@ -27,6 +27,8 @@ class Storage extends EventEmitter implements iStorage, EventEmitter {
 	constructor() {
 		if (!Storage.instance) {
 			super()
+
+			this.setMaxListeners(100)
 
 			this.storageType = ENUM_TYPE.BRWOSER
 			this.supportStorage = true
@@ -102,7 +104,7 @@ class Storage extends EventEmitter implements iStorage, EventEmitter {
 				resolve()
 			} else {
 				const _key = `${key}`
-				this.storage.set({[_key]: val}, () => {
+				this.storage.set({ [_key]: val }, () => {
 					this.emit('save', {
 						key: _key,
 						val: val,
@@ -187,7 +189,4 @@ class Storage extends EventEmitter implements iStorage, EventEmitter {
 	}
 }
 
-const StorageInstance = new Storage()
-StorageInstance.setMaxListeners(100)
-
-export default StorageInstance
+export default new Storage()

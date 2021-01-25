@@ -1,6 +1,6 @@
-import {EventEmitter} from 'events'
+import { EventEmitter } from 'events'
 
-export interface iTabInfo {
+interface iTabInfo {
 	id: number | null
 	index: number
 	status: string | null
@@ -16,13 +16,13 @@ interface tabResult {
 	info: iTabInfo | null
 }
 
-export interface iTabs {
+interface iTabs {
 	getInfo(tab: chrome.tabs.Tab): iTabInfo
 	getTab(tabId: number): Promise<tabResult>
 	getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>
 	getTabs(options: chrome.tabs.QueryInfo | null): Promise<tabResult[]>
 	getActiveTab(index: number): Promise<tabResult>
-	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}>
+	getItems(): Promise<{ [tabId: string]: { info: iTabInfo } }>
 	getActiveItem(): Promise<tabResult | null>
 
 	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs
@@ -62,18 +62,21 @@ let emptyTabResult = {
 	info: null,
 }
 
-export class tabs extends EventEmitter implements iTabs, EventEmitter {
-	static instance: tabs
+export class Tabs extends EventEmitter implements iTabs, EventEmitter {
+	static instance: Tabs
 
 	private tabs: typeof chrome.tabs | null
 	private activeId: number | null
-	private tabItems: {[tabId: string]: iTabInfo}
-	private eventsFlagMap: {[key: string]: boolean}
-	private eventsMap: {[key: string]: {[key: string]: Function}}
+	private tabItems: { [tabId: string]: iTabInfo }
+	private eventsFlagMap: { [key: string]: boolean }
+	private eventsMap: { [key: string]: { [key: string]: Function } }
 
 	constructor() {
-		if (!tabs.instance) {
+		if (!Tabs.instance) {
 			super()
+
+			this.setMaxListeners(100)
+
 			this.tabs = chrome.tabs || null
 
 			this.activeId = null
@@ -83,10 +86,10 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 
 			this.init()
 
-			tabs.instance = this
+			Tabs.instance = this
 		}
 
-		return tabs.instance
+		return Tabs.instance
 	}
 
 	private init() {
@@ -161,7 +164,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 				return
 			}
 
-			let cacheItem = this.tabItems[tab.id] || {origin: null}
+			let cacheItem = this.tabItems[tab.id] || { origin: null }
 			if (cacheItem.origin == info.origin) {
 				return
 			} else if (info != null) {
@@ -194,7 +197,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 			}
 		}, SYSTEM_EVENT_KEY)
 
-		this.getActiveTab().then(({tab, info}) => {
+		this.getActiveTab().then(({ tab, info }) => {
 			if (tab == null) {
 				return
 			}
@@ -290,7 +293,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 								return resolve(emptyTabResult)
 							}
 
-							let tab = tabs[index].tab || {id: null}
+							let tab = tabs[index].tab || { id: null }
 							let tabId = tab.id || null
 							if (tabId == null) {
 								return resolve(emptyTabResult)
@@ -325,7 +328,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 */
 	async getActiveTab(index: number = 0): Promise<tabResult> {
 		try {
-			return await this.getTabIndex(index, {active: true})
+			return await this.getTabIndex(index, { active: true })
 		} catch (err) {
 			console.warn('BrowserExt: ' + err.message || err)
 			return {
@@ -338,10 +341,10 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	/**
 	 * Returns a list of tabs stored in the class.
 	 */
-	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}> {
+	getItems(): Promise<{ [tabId: string]: { info: iTabInfo } }> {
 		return new Promise(resolve => {
 			setTimeout(() => {
-				let tabItems: {[tabId: string]: {info: iTabInfo}} = {}
+				let tabItems: { [tabId: string]: { info: iTabInfo } } = {}
 				let items = Object.entries(this.tabItems)
 				for (let [k, v] of items) {
 					tabItems[k] = {
@@ -422,7 +425,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabs {
+	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -464,7 +467,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 *
 	 * @param {String} key Event identify name
 	 */
-	removeActivated(key: string = 'init'): tabs {
+	removeActivated(key: string = 'init'): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -498,7 +501,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabs {
+	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -537,7 +540,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 *
 	 * @param {String} key Event identify name
 	 */
-	removeUpdated(key: string = 'init'): tabs {
+	removeUpdated(key: string = 'init'): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -571,7 +574,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onRemoved(callback: (tabId: number) => void, key: string = 'init'): tabs {
+	onRemoved(callback: (tabId: number) => void, key: string = 'init'): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -605,7 +608,7 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	 *
 	 * @param {String} key Event identify name
 	 */
-	removeRemoved(key: string = 'init'): tabs {
+	removeRemoved(key: string = 'init'): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -633,7 +636,4 @@ export class tabs extends EventEmitter implements iTabs, EventEmitter {
 	}
 }
 
-const tabsCtrl = new tabs()
-tabsCtrl.setMaxListeners(100)
-
-export default tabsCtrl
+export default new Tabs()

@@ -1,5 +1,5 @@
-import {ENUM_STATUS} from '../Lib/Enum'
-import {encryptValue, decryptValue} from '../Lib/Func'
+import { ENUM_STATUS } from '../Lib/Enum'
+import { encryptValue, decryptValue } from '../Lib/Func'
 
 interface iPortCallbackFunction {
 	port: chrome.runtime.Port
@@ -8,9 +8,9 @@ interface iPortCallbackFunction {
 	sendResult: (result: ENUM_STATUS, msg: any, resData: any) => any
 }
 
-type portCallbackFunction = (data: iPortCallbackFunction & {oriParam: any}) => void
+type portCallbackFunction = (data: iPortCallbackFunction & { oriParam: any }) => void
 
-export interface iPort {
+interface iPort {
 	setTimeout(ms: number)
 
 	connect(name: string): chrome.runtime.Port | null
@@ -21,27 +21,27 @@ export interface iPort {
 	on(name: string, callback: portCallbackFunction): void
 }
 
-export class port implements iPort {
-	static instance: port
+export class Port implements iPort {
+	static instance: Port
 
-	private portMap: {[key: string]: any}
+	private portMap: { [key: string]: any }
 	private __id__: number
 	private __timeout__: number
 
 	private runtime: typeof chrome.runtime | null
 
 	constructor() {
-		if (!port.instance) {
+		if (!Port.instance) {
 			this.__id__ = 0
 			this.__timeout__ = 240000
 
 			this.portMap = {}
 			this.runtime = chrome.runtime || null
 
-			port.instance = this
+			Port.instance = this
 		}
 
-		return port.instance
+		return Port.instance
 	}
 
 	/**
@@ -55,7 +55,7 @@ export class port implements iPort {
 	 *
 	 * @param ms milliseconds
 	 */
-	setTimeout(ms: number = 240000): port {
+	setTimeout(ms: number = 240000): Port {
 		this.__timeout__ = ms
 
 		return this
@@ -74,7 +74,7 @@ export class port implements iPort {
 			return this.portMap[name]
 		}
 
-		let port: chrome.runtime.Port | null = this.runtime.connect({name: name})
+		let port: chrome.runtime.Port | null = this.runtime.connect({ name: name })
 		this.portMap[name] = port
 		const removeFunction = () => {
 			let port = this.portMap[name]
@@ -111,7 +111,7 @@ export class port implements iPort {
 	 * @param name 지정된 포트 이름
 	 * @param callback 포트가 닫힐 때 발생되는 Callback 함수
 	 */
-	onDisconnect(name: string, callback: (port: chrome.runtime.Port) => void) {
+	onDisconnect(name: string, callback: (port: chrome.runtime.Port) => void): Port {
 		if (!this.runtime) {
 			console.warn('BrowserExt: Not found browser API.')
 			return this
@@ -300,4 +300,4 @@ export class port implements iPort {
 	}
 }
 
-export default new port()
+export default new Port()

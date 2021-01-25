@@ -1,7 +1,7 @@
 import { ENUM_STATUS } from './Enum'
 import {Hash, encryptData, decryptData} from './Crypt'
 
-import Storage from '../Browser/Storage'
+import storage from '../Browser/storage'
 
 /**
  * Function for common use of result values
@@ -49,7 +49,7 @@ export const makeid = (length: number, isMs: boolean = true) => {
 export const encryptValue = async (id: string | number, param: any): Promise<Object | null> => {
 	let cryptKey = Hash('sha256', Math.random() + Date.now())
 	try {
-		await Storage.save(`cryptMsg:${id}`, cryptKey)
+		await storage.save(`cryptMsg:${id}`, cryptKey)
 	} catch (err) {
 		throw err
 	}
@@ -84,7 +84,7 @@ export const encryptValue = async (id: string | number, param: any): Promise<Obj
 export const decryptValue = async (id: string | number, data: any): Promise<Object | null> => {
 	let cryptKey: string | null = null
 	try {
-		cryptKey = await Storage.loadRemove(`cryptMsg:${id}`)
+		cryptKey = await storage.loadRemove(`cryptMsg:${id}`)
 	} catch (err) {
 		throw err
 	}

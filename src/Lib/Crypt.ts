@@ -1,4 +1,4 @@
-import {createHash, createHmac, randomBytes, createCipheriv, createDecipheriv} from 'crypto'
+import { createHash, createHmac, randomBytes, createCipheriv, createDecipheriv } from 'crypto'
 
 /**
  * Create Hash
@@ -66,4 +66,12 @@ export const decryptData = (encryptData: string | number, salt: string): string 
 	decrypted = Buffer.concat([decrypted, decipher.final()])
 
 	return decrypted.toString()
+}
+
+
+export default {
+	Hash,
+	HashHmac,
+	encryptData,
+	decryptData
 }

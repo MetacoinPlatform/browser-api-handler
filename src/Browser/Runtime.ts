@@ -1,6 +1,6 @@
-type eventFunction = ({key: string, data: any, App: AppController, Store: StoreController}) => void
+type eventFunction = ({ key: string, data: any, App: AppController, Store: StoreController }) => void
 
-export interface iRuntime {
+interface iRuntime {
 	onInstalled(callback: eventFunction, key: string): void
 	removeInstalled(key: string): void
 	onConnect(callback: eventFunction, key: string): void
@@ -11,25 +11,25 @@ export interface iRuntime {
 	removeCommand(key: string): void
 }
 
-export class runtime implements iRuntime {
-	static instance: runtime
+export class Runtime implements iRuntime {
+	static instance: Runtime
 
 	private runtime: typeof chrome.runtime | null
 	private commands: typeof chrome.commands | null
-	private eventsFlagMap: {[key: string]: boolean}
-	private eventsMap: {[key: string]: {[key: string]: Function}}
+	private eventsFlagMap: { [key: string]: boolean }
+	private eventsMap: { [key: string]: { [key: string]: Function } }
 
 	constructor() {
-		if (!runtime.instance) {
+		if (!Runtime.instance) {
 			this.eventsFlagMap = {}
 			this.eventsMap = {}
 			this.runtime = chrome.runtime || null
 			this.commands = chrome.commands || null
 
-			runtime.instance = this
+			Runtime.instance = this
 		}
 
-		return runtime.instance
+		return Runtime.instance
 	}
 
 	/**
@@ -42,7 +42,7 @@ export class runtime implements iRuntime {
 		let eventList = this.eventsMap[evtKey] || {}
 		if (Object.keys(eventList).length > 0) {
 			for (let [key, cb] of Object.entries(eventList)) {
-				cb({key, data: details})
+				cb({ key, data: details })
 			}
 		}
 	}
@@ -241,4 +241,4 @@ export class runtime implements iRuntime {
 	}
 }
 
-export default new runtime()
+export default new Runtime()
