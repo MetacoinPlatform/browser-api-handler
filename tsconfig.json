@@ -1,40 +1,36 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "declaration": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "module": "CommonJS",
-        "moduleResolution": "node",
-        "noImplicitAny": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "outDir": "dist",
-        "removeComments": false,
-        "sourceMap": false,
-        "inlineSources": false,
-        "strict": true,
-        "strictPropertyInitialization": false,
-        "target": "es6",
-        "typeRoots": [
-            "./src/Types",
-            "./node_modules/@types"
-        ]
-    },
-    "typedocOptions": {
-        "excludeNotExported": true,
-        "excludePrivate": true,
-        "hideGenerator": true,
-        "mode": "modules",
-        "out": "docs",
-        "theme": "default"
-    },
-    "include": [
+	"compilerOptions": {
+		"allowJs": true,
+		"declaration": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"module": "amd",
+		"outFile": "dist/browser-extensionizer.js",
+		"moduleResolution": "node",
+		"noImplicitAny": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"outDir": "dist",
+		"preserveConstEnums": true,
+		"removeComments": true,
+		"sourceMap": true,
+		"inlineSources": true,
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"target": "es5",
+		"typeRoots": ["./node_modules/@types"]
+	},
+	"typedocOptions": {
+        "includeVersion": true,
+		"excludePrivate": true,
+		"hideGenerator": true,
+		"out": "docs",
+        "theme": "markdown",
+        "entryPoints": ["./src/"]
+	},
+	"include": [
+        "./src/*.ts",
         "./src/**/*.ts"
     ],
-    "exclude": [
-        "dist",
-        "./node_modules",
-        "test"
-    ]
+	"exclude": ["dist", "./node_modules"]
 }

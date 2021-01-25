@@ -14,7 +14,6 @@ export interface iTabInfo {
 interface tabResult {
 	tab: chrome.tabs.Tab | null
 	info: iTabInfo | null
-	data: any
 }
 
 export interface iTabsEvent {
@@ -23,12 +22,12 @@ export interface iTabsEvent {
 	getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>
 	getTabs(options: chrome.tabs.QueryInfo | null): Promise<tabResult[]>
 	getActiveTab(index: number): Promise<tabResult>
-	getItems(): Promise<{[tabId: string]: {info: iTabInfo; data: any}}>
+	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}>
 	getActiveItem(): Promise<tabResult | null>
 
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo, data: any) => void, key: string): iTabsEvent
+	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabsEvent
 	removeActivated(key: string): iTabsEvent
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo, data: any) => void, key: string): iTabsEvent
+	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabsEvent
 	removeUpdated(key: string): iTabsEvent
 	onRemoved(callback: (tabId: number) => void, key: string): iTabsEvent
 	removeRemoved(key: string): iTabsEvent
@@ -57,26 +56,10 @@ function tabParse(tab: chrome.tabs.Tab): iTabInfo {
 	}
 }
 
-function getConnectConfig(origin: string | null): iConnectConfig | null {
-	if (!origin) {
-		return null
-	}
-
-	let data = Store.val() || {}
-	let connectData = data.Connect || {}
-	let cbData = null
-	if (origin != null) {
-		cbData = connectData[origin]
-	}
-
-	return cbData
-}
-
 const SYSTEM_EVENT_KEY = '___MTC_init___'
 let emptyTabResult = {
 	tab: null,
 	info: null,
-	data: null,
 }
 
 export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter {
@@ -119,25 +102,22 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 					}
 
 					let tabInfo = tabParse(tab)
-					let cbData = getConnectConfig(tabInfo.origin)
 
 					if (tab.active) {
 						this.emit('active', {
 							tab: tab,
 							info: tabInfo,
-							data: cbData,
 						})
 					}
 					this.emit('change', {
 						tab: tab,
 						info: tabInfo,
-						data: cbData,
 					})
 				})
 			})
 		}
 
-		this.onActivated((tab, info, data) => {
+		this.onActivated((tab, info) => {
 			if (tab == null) {
 				return
 			}
@@ -158,17 +138,15 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				this.emit('active', {
 					tab: tab,
 					info: info,
-					data: data,
 				})
 			}
 			this.emit('change', {
 				tab: tab,
 				info: info,
-				data: data,
 			})
 		}, SYSTEM_EVENT_KEY)
 
-		this.onUpdated((tab, info, data) => {
+		this.onUpdated((tab, info) => {
 			if (tab == null) {
 				return
 			} else if (tab.status == 'loading') {
@@ -194,14 +172,12 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				this.emit('active', {
 					tab: tab,
 					info: info,
-					data: data,
 				})
 			}
 
 			this.emit('change', {
 				tab: tab,
 				info: info,
-				data: data,
 			})
 		}, SYSTEM_EVENT_KEY)
 
@@ -218,7 +194,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 			}
 		}, SYSTEM_EVENT_KEY)
 
-		this.getActiveTab().then(({tab, info, data}) => {
+		this.getActiveTab().then(({tab, info}) => {
 			if (tab == null) {
 				return
 			}
@@ -239,13 +215,11 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				this.emit('active', {
 					tab: tab,
 					info: info,
-					data: data,
 				})
 			}
 			this.emit('change', {
 				tab: tab,
 				info: info,
-				data: data,
 			})
 		})
 	}
@@ -272,12 +246,10 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				try {
 					this.tabs.get(tabId, tab => {
 						let tabInfo = tabParse(tab)
-						let cbData = getConnectConfig(tabInfo.origin)
 
 						resolve({
 							tab: tab,
 							info: tabInfo,
-							data: cbData,
 						})
 					})
 				} catch (err) {
@@ -326,11 +298,9 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 
 							this.tabs.get(tabId, tab => {
 								let tabInfo = tabParse(tab)
-								let cbData = getConnectConfig(tabInfo.origin)
 								resolve({
 									tab: tab,
 									info: tabInfo,
-									data: cbData,
 								})
 							})
 						} catch (err) {
@@ -361,7 +331,6 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 			return {
 				tab: null,
 				info: null,
-				data: null,
 			}
 		}
 	}
@@ -369,16 +338,14 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	/**
 	 * Returns a list of tabs stored in the class.
 	 */
-	getItems(): Promise<{[tabId: string]: {info: iTabInfo; data: any}}> {
+	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}> {
 		return new Promise(resolve => {
 			setTimeout(() => {
-				let tabItems: {[tabId: string]: {info: iTabInfo; data: any}} = {}
+				let tabItems: {[tabId: string]: {info: iTabInfo}} = {}
 				let items = Object.entries(this.tabItems)
 				for (let [k, v] of items) {
-					let cbData = getConnectConfig(v.origin)
 					tabItems[k] = {
 						info: v,
-						data: cbData,
 					}
 				}
 				return resolve(tabItems)
@@ -401,12 +368,10 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				}
 
 				let tabInfo = this.tabItems[this.activeId] || {}
-				let cbData = getConnectConfig(tabInfo.origin)
 
 				return resolve({
 					tab: null,
 					info: tabInfo,
-					data: cbData,
 				})
 			}, 100)
 		})
@@ -437,11 +402,9 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 					let tabItems: tabResult[] = []
 					tabs.map(tab => {
 						let tabInfo = tabParse(tab)
-						let cbData = getConnectConfig(tabInfo.origin)
 						tabItems.push({
 							tab: tab,
 							info: tabInfo,
-							data: cbData,
 						})
 					})
 					resolve(tabItems)
@@ -459,7 +422,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo, data: any) => void, key: string = 'init'): tabsEvent {
+	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabsEvent {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -476,11 +439,10 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				this.tabs.get(tabs.tabId, tab => {
 					try {
 						let tabInfo = tabParse(tab)
-						let cbData = getConnectConfig(tabInfo.origin)
 
 						let list = Object.values(this.eventsMap[evtKey]) || []
 						list.map(cb => {
-							cb(tab, tabInfo, cbData)
+							cb(tab, tabInfo)
 						})
 					} catch (err) {
 						//
@@ -536,7 +498,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo, data: any) => void, key: string = 'init'): tabsEvent {
+	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabsEvent {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -552,16 +514,9 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 				try {
 					let tabInfo = tabParse(tab)
 
-					let data = Store.val()
-					let connectData = data.Connect || {}
-					let cbData = null
-					if (tabInfo.origin != null) {
-						cbData = connectData[tabInfo.origin]
-					}
-
 					let list = Object.values(this.eventsMap[evtKey]) || []
 					list.map(cb => {
-						cb(tab, tabInfo, cbData)
+						cb(tab, tabInfo)
 					})
 				} catch (err) {
 					//

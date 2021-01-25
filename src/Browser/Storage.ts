@@ -176,7 +176,7 @@ class Storage extends EventEmitter implements iStorage, EventEmitter {
 		return new Promise(async resolve => {
 			try {
 				let val = await this.load(key)
-				await remove(key)
+				await this.remove(key)
 
 				resolve(val)
 			} catch (err) {

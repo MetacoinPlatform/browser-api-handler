@@ -1,6 +1,3 @@
-import App from '../App'
-import Store from '../Store'
-
 type eventFunction = ({key: string, data: any, App: AppController, Store: StoreController}) => void
 
 export interface iRuntimeEvent {
@@ -45,7 +42,7 @@ export class runtimeEvent implements iRuntimeEvent {
 		let eventList = this.eventsMap[evtKey] || {}
 		if (Object.keys(eventList).length > 0) {
 			for (let [key, cb] of Object.entries(eventList)) {
-				cb({key, data: details, App, Store})
+				cb({key, data: details})
 			}
 		}
 	}

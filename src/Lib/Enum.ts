@@ -1,19 +1,4 @@
 /**
- * HTTP METHODS
- */
-export enum ENUM_METHODS {
-	GET = 'GET',
-	POST = 'POST',
-	PUT = 'PUT',
-	DELETE = 'DELETE',
-}
-
-export enum ENUM_SERVER {
-	MAINNET = 1,
-	TESTNET = 5,
-}
-
-/**
  * This class result status
  */
 export enum ENUM_STATUS {
@@ -21,17 +6,6 @@ export enum ENUM_STATUS {
 	ERROR = 'ERROR',
 	WARNING = 'WARNING',
 	DENIED = 'DENIED',
-}
-
-/**
- * Event list
- */
-export enum ENUM_EVENT {
-	REGISTER = 'REGISTER',
-	ACCOUNTS = 'GET_ACCOUNTS',
-	ADDRESSBOOK = 'GET_ADDRESSBOOK',
-	STORE = 'UPDATE_STORE',
-	NOTIFY = 'UPDATE_NOTIFY',
 }
 
 /**

@@ -8,14 +8,14 @@
 	],
 	"scripts": {
 		"build": "tsc",
+		"build:gulp": "node build/gulp.js",
 		"build:watch": "yarn build && tsc -w",
 		"build:link": "yarn build && cd dist && yarn link && rm -rf node_modules && cd ..",
 		"lint": "eslint . --ext ts",
 		"lint:fix": "eslint . --ext ts --fix",
-		"doc": "typedoc src/"
+		"doc": "typedoc && npx concat-md --decrease-title-levels --dir-name-as-title docs > README.md"
 	},
 	"keywords": [
-		"Metacoin",
 		"Browser",
 		"Extension"
 	],
@@ -68,9 +68,13 @@
 		"@typescript-eslint/parser": "^4.11.0",
 		"babel-eslint": "^10.1.0",
 		"babel-loader": "^8.1.0",
+		"concat-md": "^0.3.5",
 		"eslint": "^7.11.0",
+		"gulp": "^4.0.2",
+		"gulp-typescript": "^5.0.1",
 		"ts-node": "^9.1.1",
-		"typedoc": "^0.19.2",
+		"typedoc": "^0.20.18",
+		"typedoc-plugin-markdown": "^3.4.3",
 		"typescript": "^4.1.3"
 	}
 }
