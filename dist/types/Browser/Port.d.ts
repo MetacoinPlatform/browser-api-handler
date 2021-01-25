@@ -9,7 +9,7 @@ interface iPortCallbackFunction {
 declare type portCallbackFunction = (data: iPortCallbackFunction & {
     oriParam: any;
 }) => void;
-export interface iPort {
+interface iPort {
     setTimeout(ms: number): any;
     connect(name: string): chrome.runtime.Port | null;
     disConnect(name: string): Boolean;
