@@ -1,12 +1,12 @@
 /// <reference types="chrome" />
-export interface iAlarms {
+interface iAlarms {
     create(name: string, options: chrome.alarms.AlarmCreateInfo): any;
     addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void): any;
     removeListener(name: string, id: string): any;
     removeListeners(name: string): any;
     clear(name: string): void;
 }
-export declare class alarms implements iAlarms {
+declare class alarms implements iAlarms {
     static instance: alarms;
     private alarm;
     private eventMap;

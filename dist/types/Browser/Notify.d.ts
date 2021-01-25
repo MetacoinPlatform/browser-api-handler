@@ -1,5 +1,5 @@
 /// <reference types="chrome" />
-export interface iNotify {
+interface iNotify {
     setOptions(id: string, options?: chrome.notifications.NotificationOptions): any;
     onClicked(id: string, callback: (notificationId: string) => void): any;
     removeClicked(id: string): any;
@@ -13,7 +13,7 @@ export interface iNotify {
     update(id: string, options?: chrome.notifications.NotificationOptions): Promise<boolean>;
     getAll(): Promise<Object>;
 }
-export declare class notify implements iNotify {
+declare class notify implements iNotify {
     static instance: notify;
     private notify;
     private notifyMap;

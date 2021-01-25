@@ -1,7 +1,7 @@
 /// <reference types="chrome" />
 /// <reference types="node" />
 import { EventEmitter } from 'events';
-export interface iTabInfo {
+interface iTabInfo {
     id: number | null;
     index: number;
     status: string | null;
@@ -15,7 +15,7 @@ interface tabResult {
     tab: chrome.tabs.Tab | null;
     info: iTabInfo | null;
 }
-export interface iTabs {
+interface iTabs {
     getInfo(tab: chrome.tabs.Tab): iTabInfo;
     getTab(tabId: number): Promise<tabResult>;
     getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>;
@@ -34,7 +34,7 @@ export interface iTabs {
     onRemoved(callback: (tabId: number) => void, key: string): iTabs;
     removeRemoved(key: string): iTabs;
 }
-export declare class tabs extends EventEmitter implements iTabs, EventEmitter {
+declare class tabs extends EventEmitter implements iTabs, EventEmitter {
     static instance: tabs;
     private tabs;
     private activeId;

@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from 'events';
 import { ENUM_STORAGE } from '../Lib/Enum';
-export interface iStorage {
+interface iStorage {
     changeType(type: ENUM_STORAGE): iStorage;
     save(key: string | number, val: any): Promise<void>;
     load(key: string | number): Promise<any>;
