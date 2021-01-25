@@ -16,7 +16,7 @@ interface tabResult {
 	info: iTabInfo | null
 }
 
-export interface iTabsEvent {
+export interface iTabs {
 	getInfo(tab: chrome.tabs.Tab): iTabInfo
 	getTab(tabId: number): Promise<tabResult>
 	getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>
@@ -25,12 +25,12 @@ export interface iTabsEvent {
 	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}>
 	getActiveItem(): Promise<tabResult | null>
 
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabsEvent
-	removeActivated(key: string): iTabsEvent
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabsEvent
-	removeUpdated(key: string): iTabsEvent
-	onRemoved(callback: (tabId: number) => void, key: string): iTabsEvent
-	removeRemoved(key: string): iTabsEvent
+	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs
+	removeActivated(key: string): iTabs
+	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs
+	removeUpdated(key: string): iTabs
+	onRemoved(callback: (tabId: number) => void, key: string): iTabs
+	removeRemoved(key: string): iTabs
 }
 
 function tabParse(tab: chrome.tabs.Tab): iTabInfo {
@@ -62,8 +62,8 @@ let emptyTabResult = {
 	info: null,
 }
 
-export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter {
-	static instance: tabsEvent
+export class tabs extends EventEmitter implements iTabs, EventEmitter {
+	static instance: tabs
 
 	private tabs: typeof chrome.tabs | null
 	private activeId: number | null
@@ -72,7 +72,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	private eventsMap: {[key: string]: {[key: string]: Function}}
 
 	constructor() {
-		if (!tabsEvent.instance) {
+		if (!tabs.instance) {
 			super()
 			this.tabs = chrome.tabs || null
 
@@ -83,10 +83,10 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 
 			this.init()
 
-			tabsEvent.instance = this
+			tabs.instance = this
 		}
 
-		return tabsEvent.instance
+		return tabs.instance
 	}
 
 	private init() {
@@ -422,7 +422,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabsEvent {
+	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -464,7 +464,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 *
 	 * @param {String} key Event identify name
 	 */
-	removeActivated(key: string = 'init'): tabsEvent {
+	removeActivated(key: string = 'init'): tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -498,7 +498,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabsEvent {
+	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -537,7 +537,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 *
 	 * @param {String} key Event identify name
 	 */
-	removeUpdated(key: string = 'init'): tabsEvent {
+	removeUpdated(key: string = 'init'): tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -571,7 +571,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onRemoved(callback: (tabId: number) => void, key: string = 'init'): tabsEvent {
+	onRemoved(callback: (tabId: number) => void, key: string = 'init'): tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -605,7 +605,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	 *
 	 * @param {String} key Event identify name
 	 */
-	removeRemoved(key: string = 'init'): tabsEvent {
+	removeRemoved(key: string = 'init'): tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -633,9 +633,7 @@ export class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter 
 	}
 }
 
-export default () => {
-	const tabsCtrl = new tabsEvent()
-	tabsCtrl.setMaxListeners(100)
+const tabsCtrl = new tabs()
+tabsCtrl.setMaxListeners(100)
 
-	return tabsCtrl
-}
+export default tabsCtrl

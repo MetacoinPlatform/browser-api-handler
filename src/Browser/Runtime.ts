@@ -1,6 +1,6 @@
 type eventFunction = ({key: string, data: any, App: AppController, Store: StoreController}) => void
 
-export interface iRuntimeEvent {
+export interface iRuntime {
 	onInstalled(callback: eventFunction, key: string): void
 	removeInstalled(key: string): void
 	onConnect(callback: eventFunction, key: string): void
@@ -11,8 +11,8 @@ export interface iRuntimeEvent {
 	removeCommand(key: string): void
 }
 
-export class runtimeEvent implements iRuntimeEvent {
-	static instance: runtimeEvent
+export class runtime implements iRuntime {
+	static instance: runtime
 
 	private runtime: typeof chrome.runtime | null
 	private commands: typeof chrome.commands | null
@@ -20,16 +20,16 @@ export class runtimeEvent implements iRuntimeEvent {
 	private eventsMap: {[key: string]: {[key: string]: Function}}
 
 	constructor() {
-		if (!runtimeEvent.instance) {
+		if (!runtime.instance) {
 			this.eventsFlagMap = {}
 			this.eventsMap = {}
 			this.runtime = chrome.runtime || null
 			this.commands = chrome.commands || null
 
-			runtimeEvent.instance = this
+			runtime.instance = this
 		}
 
-		return runtimeEvent.instance
+		return runtime.instance
 	}
 
 	/**
@@ -241,4 +241,4 @@ export class runtimeEvent implements iRuntimeEvent {
 	}
 }
 
-export default new runtimeEvent()
+export default new runtime()
