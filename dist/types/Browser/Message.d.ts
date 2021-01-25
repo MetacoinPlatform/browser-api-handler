@@ -9,7 +9,7 @@ declare type onCallbackFunction = (data: iOnCallbackFunction & {
     oriParam: any;
     sender: chrome.runtime.MessageSender;
 }) => void;
-interface iMessage {
+export interface iMessage {
     send(method: string, param?: any, isEncrypt?: boolean): Promise<any>;
     sendTab(tabId: number, method: string, param?: any, isEncrypt?: boolean): Promise<any>;
     on(callback: onCallbackFunction, extId?: string): object | null;

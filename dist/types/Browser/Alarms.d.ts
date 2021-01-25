@@ -1,5 +1,5 @@
 /// <reference types="chrome" />
-interface iAlarms {
+export interface iAlarms {
     create(name: string, options: chrome.alarms.AlarmCreateInfo): any;
     addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void): any;
     removeListener(name: string, id: string): any;

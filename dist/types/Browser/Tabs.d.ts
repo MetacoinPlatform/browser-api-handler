@@ -15,7 +15,7 @@ interface tabResult {
     tab: chrome.tabs.Tab | null;
     info: iTabInfo | null;
 }
-interface iTabs {
+export interface iTabs {
     getInfo(tab: chrome.tabs.Tab): iTabInfo;
     getTab(tabId: number): Promise<tabResult>;
     getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>;
