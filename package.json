@@ -9,13 +9,6 @@
 		"dist/"
 	],
 	"scripts": {
-		"build": "tsc",
-		"build:rollup": "rollup -c",
-		"build:watch": "yarn build && tsc -w",
-		"build:link": "yarn build && cd dist && yarn link && rm -rf node_modules && cd ..",
-		"lint": "eslint . --ext ts",
-		"lint:fix": "eslint . --ext ts --fix",
-		"doc": "typedoc && npx concat-md --decrease-title-levels --dir-name-as-title docs > README.md"
 	},
 	"keywords": [
 		"Browser",
@@ -28,35 +21,6 @@
 	"engines": {
 		"node": ">=12",
 		"yarn": "^1.16.0"
-	},
-	"eslintConfig": {
-		"root": true,
-		"env": {
-			"es6": true,
-			"node": true,
-			"browser": true,
-			"webextensions": true
-		},
-		"extends": [
-			"eslint:recommended",
-			"plugin:@typescript-eslint/eslint-recommended"
-		],
-		"parserOptions": {
-			"ecmaVersion": 2018,
-			"parser": "@typescript-eslint/parser",
-			"sourceType": "module",
-			"plugins": [
-				"@typescript-eslint"
-			]
-		},
-		"rules": {
-			"no-unused-vars": [
-				"warn",
-				{
-					"vars": "all"
-				}
-			]
-		}
 	},
 	"author": "Inblock",
 	"license": "GPL3.0",
