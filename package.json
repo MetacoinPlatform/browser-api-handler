@@ -4,7 +4,10 @@
 	"description": "Metacoin browser extension",
 	"main": "dist/browser-extensionizer.cjs.min.js",
 	"module": "dist/browser-extensionizer.es.min.js",
-	"types": "dist/index.d.ts",
+	"typings": "dist/index.d.ts",
+	"typescript": {
+	  "definition": "dist/index.d.ts"
+	},
 	"files": [
 		"dist/"
 	],

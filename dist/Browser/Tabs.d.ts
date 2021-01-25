@@ -15,7 +15,7 @@ interface tabResult {
     tab: chrome.tabs.Tab | null;
     info: iTabInfo | null;
 }
-export interface iTabsEvent {
+export interface iTabs {
     getInfo(tab: chrome.tabs.Tab): iTabInfo;
     getTab(tabId: number): Promise<tabResult>;
     getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>;
@@ -27,15 +27,15 @@ export interface iTabsEvent {
         };
     }>;
     getActiveItem(): Promise<tabResult | null>;
-    onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabsEvent;
-    removeActivated(key: string): iTabsEvent;
-    onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabsEvent;
-    removeUpdated(key: string): iTabsEvent;
-    onRemoved(callback: (tabId: number) => void, key: string): iTabsEvent;
-    removeRemoved(key: string): iTabsEvent;
+    onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs;
+    removeActivated(key: string): iTabs;
+    onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs;
+    removeUpdated(key: string): iTabs;
+    onRemoved(callback: (tabId: number) => void, key: string): iTabs;
+    removeRemoved(key: string): iTabs;
 }
-export declare class tabsEvent extends EventEmitter implements iTabsEvent, EventEmitter {
-    static instance: tabsEvent;
+export declare class tabs extends EventEmitter implements iTabs, EventEmitter {
+    static instance: tabs;
     private tabs;
     private activeId;
     private tabItems;
@@ -54,12 +54,12 @@ export declare class tabsEvent extends EventEmitter implements iTabsEvent, Event
     }>;
     getActiveItem(): Promise<tabResult | null>;
     getTabs(options?: chrome.tabs.QueryInfo | null): Promise<tabResult[]>;
-    onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key?: string): tabsEvent;
-    removeActivated(key?: string): tabsEvent;
-    onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key?: string): tabsEvent;
-    removeUpdated(key?: string): tabsEvent;
-    onRemoved(callback: (tabId: number) => void, key?: string): tabsEvent;
-    removeRemoved(key?: string): tabsEvent;
+    onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key?: string): tabs;
+    removeActivated(key?: string): tabs;
+    onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key?: string): tabs;
+    removeUpdated(key?: string): tabs;
+    onRemoved(callback: (tabId: number) => void, key?: string): tabs;
+    removeRemoved(key?: string): tabs;
 }
-declare const _default: () => tabsEvent;
-export default _default;
+declare const tabsCtrl: tabs;
+export default tabsCtrl;

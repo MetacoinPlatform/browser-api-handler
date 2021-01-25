@@ -4,7 +4,7 @@ declare type eventFunction = ({ key: string, data: any, App: AppController, Stor
     App: any;
     Store: any;
 }) => void;
-export interface iRuntimeEvent {
+export interface iRuntime {
     onInstalled(callback: eventFunction, key: string): void;
     removeInstalled(key: string): void;
     onConnect(callback: eventFunction, key: string): void;
@@ -14,8 +14,8 @@ export interface iRuntimeEvent {
     onCommand(callback: eventFunction, key: string): void;
     removeCommand(key: string): void;
 }
-export declare class runtimeEvent implements iRuntimeEvent {
-    static instance: runtimeEvent;
+export declare class runtime implements iRuntime {
+    static instance: runtime;
     private runtime;
     private commands;
     private eventsFlagMap;
@@ -32,5 +32,5 @@ export declare class runtimeEvent implements iRuntimeEvent {
     onCommand(callback: Function, key?: string): void;
     removeCommand(key: string): void;
 }
-declare const _default: runtimeEvent;
+declare const _default: runtime;
 export default _default;

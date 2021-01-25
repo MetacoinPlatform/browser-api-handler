@@ -1,5 +1,5 @@
 import typescript from 'rollup-plugin-typescript2'
-import builtins from 'rollup-plugin-node-builtins'
+//import builtins from 'rollup-plugin-node-builtins'
 //import resolve from '@rollup/plugin-node-resolve'
 //import json from '@rollup/plugin-json'
 //import commonjs from '@rollup/plugin-commonjs'
@@ -21,7 +21,6 @@ export default [
         ],
         plugins: [
             typescript(),
-            builtins(),
             terser()
         ],
     },
