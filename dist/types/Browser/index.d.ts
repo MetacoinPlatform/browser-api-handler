@@ -1,8 +1,8 @@
-import Runtime from './Runtime';
-import Message from './Message';
-import Port from './Port';
-import Alarms from './Alarms';
-import Notify from './Notify';
-import Tabs from './Tabs';
-import Storage from './Storage';
-export { Runtime, Message, Port, Alarms, Notify, Tabs, Storage, };
+import runtime from './Runtime';
+import message from './Message';
+import port from './Port';
+import alarms from './Alarms';
+import notify from './Notify';
+import tabs from './Tabs';
+import storage from './Storage';
+export { runtime, message, port, alarms, notify, tabs, storage, };
