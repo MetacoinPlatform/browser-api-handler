@@ -4,17 +4,17 @@ import {makeid, encryptValue, decryptValue} from '../Lib/Func'
 interface iOnCallbackFunction {
 	method: string | null
 	param: any
+	oriParam: any
+	sender: chrome.runtime.MessageSender
 	sendResult: (result: ENUM_STATUS, msg: any, data: any) => any
 }
-
-type onCallbackFunction = (data: iOnCallbackFunction & {oriParam: any; sender: chrome.runtime.MessageSender}) => void
 
 interface iMessage {
 	send(method: string, param?: any, isEncrypt?: boolean): Promise<any>
 	sendTab(tabId: number, method: string, param?: any, isEncrypt?: boolean): Promise<any>
 
-	on(callback: onCallbackFunction, extId?: string): object | null
-	onExternal(callback: onCallbackFunction, extId?: string): object | null
+	on(callback: (data: iOnCallbackFunction) => void, extId?: string): object | null
+	onExternal(callback: (data: iOnCallbackFunction) => void, extId?: string): object | null
 }
 
 export class Message implements iMessage {
@@ -116,7 +116,7 @@ export class Message implements iMessage {
 	 * @param callback On 이벤트 함수, 반드시 sendResult를 호출해야됩니다.
 	 * @param extId 특정 app extension id를 입력시 해당 id와 매치된 메세지만 callback을 실행합니다.
 	 */
-	on(callback: onCallbackFunction, extId: string = ''): object | null {
+	on(callback: (data: iOnCallbackFunction) => void, extId: string = ''): object | null {
 		if (!this.runtime) {
 			console.warn('BrowserExt: Not found browser API.')
 			return null
@@ -192,7 +192,7 @@ export class Message implements iMessage {
 	 * @param callback On 이벤트 함수, 반드시 sendResult를 호출해야됩니다.
 	 * @param extId 특정 app extension id를 입력시 해당 id와 매치된 메세지만 callback을 실행합니다.
 	 */
-	onExternal(callback: onCallbackFunction, extId: string = ''): object | null {
+	onExternal(callback: (data: iOnCallbackFunction) => void, extId: string = ''): object | null {
 		if (!this.runtime) {
 			console.warn('BrowserExt: Not found browser API.')
 			return null
