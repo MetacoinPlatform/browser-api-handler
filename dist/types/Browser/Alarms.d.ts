@@ -4,19 +4,18 @@ interface iAlarms {
     addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void): any;
     removeListener(name: string, id: string): any;
     removeListeners(name: string): any;
-    clear(name: string): void;
+    clear(name: string): any;
 }
-declare class alarms implements iAlarms {
-    static instance: alarms;
+export declare class Alarms implements iAlarms {
     private alarm;
     private eventMap;
     constructor();
-    create(name: string, options: chrome.alarms.AlarmCreateInfo): this;
-    addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void): this;
-    removeListener(name: string, id: string): this;
-    removeListeners(name: string): this;
-    clear(name: string): this;
-    clearAll(): this;
+    create(name: string, options: chrome.alarms.AlarmCreateInfo): Alarms;
+    addListener(name: string, callback: (id: string, alarm: chrome.alarms.Alarm) => void): Alarms;
+    removeListener(name: string, id: string): Alarms;
+    removeListeners(name: string): Alarms;
+    clear(name: string): Alarms;
+    clearAll(): Alarms;
 }
-declare const _default: alarms;
+declare const _default: Alarms;
 export default _default;

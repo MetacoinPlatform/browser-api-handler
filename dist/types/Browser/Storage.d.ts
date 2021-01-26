@@ -7,8 +7,7 @@ interface iStorage {
     load(key: string | number): Promise<any>;
     remove(key: string | number): Promise<any>;
 }
-declare class Storage extends EventEmitter implements iStorage, EventEmitter {
-    static instance: Storage;
+export declare class Storage extends EventEmitter implements iStorage, EventEmitter {
     private storageType;
     private supportStorage;
     private storage;
@@ -19,5 +18,5 @@ declare class Storage extends EventEmitter implements iStorage, EventEmitter {
     remove(key: string | number): Promise<any>;
     loadRemove(key: string): Promise<any>;
 }
-declare const StorageInstance: Storage;
-export default StorageInstance;
+declare const _default: Storage;
+export default _default;

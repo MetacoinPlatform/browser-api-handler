@@ -13,24 +13,23 @@ interface iNotify {
     update(id: string, options?: chrome.notifications.NotificationOptions): Promise<boolean>;
     getAll(): Promise<Object>;
 }
-declare class notify implements iNotify {
-    static instance: notify;
+export declare class Notify implements iNotify {
     private notify;
     private notifyMap;
     constructor();
     private setupNotifyOption;
-    setOptions(id: string, options?: chrome.notifications.NotificationOptions): this;
-    onClicked(id: string, callback: (notificationId: string) => void): this;
-    removeClicked(id: string): this;
-    onClosed(id: string, callback: (notificationId: string, byUser: boolean) => void): this;
-    removeClosed(id: string): this;
-    onButtonClicked(id: string, callback: (notificationId: string, buttonIndex: number) => void): this;
-    removeButtonClicked(id: string): this;
-    onPermissionChanged(id: string, callback: (level: string) => void): this;
-    removePermissionChanged(id: string): this;
+    setOptions(id: string, options?: chrome.notifications.NotificationOptions): Notify;
+    onClicked(id: string, callback: (notificationId: string) => void): Notify;
+    removeClicked(id: string): Notify;
+    onClosed(id: string, callback: (notificationId: string, byUser: boolean) => void): Notify;
+    removeClosed(id: string): Notify;
+    onButtonClicked(id: string, callback: (notificationId: string, buttonIndex: number) => void): Notify;
+    removeButtonClicked(id: string): Notify;
+    onPermissionChanged(id: string, callback: (level: string) => void): Notify;
+    removePermissionChanged(id: string): Notify;
     create(id: string, options?: chrome.notifications.NotificationOptions): Promise<string>;
     update(id: string, options?: chrome.notifications.NotificationOptions): Promise<boolean>;
     getAll(): Promise<Object>;
 }
-declare const _default: notify;
+declare const _default: Notify;
 export default _default;

@@ -17,21 +17,20 @@ interface iPort {
     send(name: string, method: string, param?: any, isEncrypt?: boolean, response?: Function | null): void;
     on(name: string, callback: portCallbackFunction): void;
 }
-declare class port implements iPort {
-    static instance: port;
+export declare class Port implements iPort {
     private portMap;
     private __id__;
     private __timeout__;
     private runtime;
     constructor();
-    setTimeout(ms?: number): port;
+    setTimeout(ms?: number): Port;
     connect(name: string): chrome.runtime.Port | null;
     disConnect(name: string): Boolean;
-    onDisconnect(name: string, callback: (port: chrome.runtime.Port) => void): this;
+    onDisconnect(name: string, callback: (port: chrome.runtime.Port) => void): Port;
     send(name: string, method: string, param?: any, isEncrypt?: boolean, response?: Function | null): Promise<void>;
     on(name: string, callback: portCallbackFunction): {
         removeListener: () => void;
     } | undefined;
 }
-declare const _default: port;
+declare const _default: Port;
 export default _default;

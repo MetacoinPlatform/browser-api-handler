@@ -15,8 +15,7 @@ interface iMessage {
     on(callback: onCallbackFunction, extId?: string): object | null;
     onExternal(callback: onCallbackFunction, extId?: string): object | null;
 }
-declare class message implements iMessage {
-    static instance: message;
+export declare class Message implements iMessage {
     private runtime;
     private tabs;
     constructor();
@@ -25,5 +24,5 @@ declare class message implements iMessage {
     on(callback: onCallbackFunction, extId?: string): object | null;
     onExternal(callback: onCallbackFunction, extId?: string): object | null;
 }
-declare const _default: message;
+declare const _default: Message;
 export default _default;

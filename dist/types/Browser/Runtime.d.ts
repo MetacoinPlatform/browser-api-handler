@@ -14,8 +14,7 @@ interface iRuntime {
     onCommand(callback: eventFunction, key: string): void;
     removeCommand(key: string): void;
 }
-declare class runtime implements iRuntime {
-    static instance: runtime;
+export declare class Runtime implements iRuntime {
     private runtime;
     private commands;
     private eventsFlagMap;
@@ -32,5 +31,5 @@ declare class runtime implements iRuntime {
     onCommand(callback: Function, key?: string): void;
     removeCommand(key: string): void;
 }
-declare const _default: runtime;
+declare const _default: Runtime;
 export default _default;
