@@ -197,7 +197,7 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 
 	/**
 	 * Window Post message 발송
-	 * 
+	 *
 	 * @param method 전달할 임의의 메소드
 	 * @param param 전달할 임의의 데이터
 	 * @param response Response를 받아야할 경우 Timeout 시간 만큼 기다립니다.
@@ -220,8 +220,8 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 				const resultCallback = (res: any) => {
 					if (res.origin != origin) {
 						return
-					} 
-					
+					}
+
 					let _data: any = res.data || {}
 					if (_data.name != this.recvName) {
 						return
@@ -281,7 +281,7 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 }
 
 export default (name: string, recvName: string): windowMsg => {
-	const winMsg = new windowMsg(name, recvName)
+	const winMsg: windowMsg = new windowMsg(name, recvName)
 	winMsg.setMaxListeners(100)
 	winMsg.setupEvent()
 
