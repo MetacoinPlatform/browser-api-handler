@@ -18,7 +18,7 @@ interface iWindowMsgEvent {
     setTimeout(ms: number): any;
     send(method: string, param: any, response?: Function): void;
 }
-export default class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmitter {
+export declare class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmitter {
     private isRun;
     private replay;
     private __id__;
@@ -30,8 +30,9 @@ export default class windowMsg extends EventEmitter implements iWindowMsgEvent, 
     private doctypeCheck;
     private suffixCheck;
     private documentElementCheck;
-    private setupEvent;
+    setupEvent(): Promise<void>;
     setTimeout(ms?: number): windowMsg;
     send(method: string, param?: any, response?: Function | null): void;
 }
-export {};
+declare const _default: (name: string, recvName: string) => windowMsg;
+export default _default;
