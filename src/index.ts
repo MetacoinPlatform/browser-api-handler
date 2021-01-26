@@ -6,6 +6,7 @@ import alarms from './Browser/Alarms'
 import tabs from './Browser/Tabs'
 import storage from './Browser/Storage'
 import window from './Browser/Window'
+import windowMessage from './Browser/WindowMessage'
 
 import * as crypt from './Lib/Crypt'
 
@@ -18,5 +19,6 @@ export default {
 	tabs,
 	storage,
 	window,
+	windowMessage,
 	crypt
 }
