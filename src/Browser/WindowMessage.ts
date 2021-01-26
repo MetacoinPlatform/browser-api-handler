@@ -22,7 +22,7 @@ interface iWindowMsgEvent {
 	send(method: string, param: any, response?: Function): void
 }
 
-export default class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmitter {
+export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmitter {
 	private isRun: boolean
 	private replay: number
 
@@ -46,8 +46,6 @@ export default class windowMsg extends EventEmitter implements iWindowMsgEvent, 
 		this.replay = 0
 		this.name = name
 		this.recvName = recvName || name
-
-		this.setupEvent()
 	}
 
 	/**
@@ -108,7 +106,7 @@ export default class windowMsg extends EventEmitter implements iWindowMsgEvent, 
 	/**
 	 * 초기 Init Event 설정
 	 */
-	private async setupEvent() {
+	async setupEvent() {
 		if (this.isRun) {
 			return
 		} else if (!this.shouldWindow) {
@@ -280,4 +278,12 @@ export default class windowMsg extends EventEmitter implements iWindowMsgEvent, 
 			throw err
 		}
 	}
+}
+
+export default (name: string, recvName: string): windowMsg => {
+	const winMsg = new windowMsg(name, recvName)
+	winMsg.setMaxListeners(100)
+	winMsg.setupEvent()
+
+	return winMsg
 }
