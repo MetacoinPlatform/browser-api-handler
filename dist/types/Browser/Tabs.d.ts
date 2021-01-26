@@ -60,5 +60,5 @@ export declare class Tabs extends EventEmitter implements iTabs, EventEmitter {
     onRemoved(callback: (tabId: number) => void, key?: string): Tabs;
     removeRemoved(key?: string): Tabs;
 }
-declare const _default: Tabs;
+declare const _default: () => Tabs;
 export default _default;
