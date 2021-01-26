@@ -1,4 +1,4 @@
-type eventFunction = ({key: string, data: any, App: AppController, Store: StoreController}) => void
+type eventFunction = ({key: string, data: any}) => void
 
 interface iRuntime {
 	onInstalled(callback: eventFunction, key: string): void
