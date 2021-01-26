@@ -628,4 +628,6 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	}
 }
 
-export default new Tabs()
+export default () => {
+	return new Tabs()
+}
