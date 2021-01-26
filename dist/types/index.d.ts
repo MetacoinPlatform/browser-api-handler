@@ -1,3 +1,4 @@
+import windowMessage from './Browser/WindowMessage';
 import * as crypt from './Lib/Crypt';
 declare const _default: {
     runtime: import("./Browser/Runtime").Runtime;
@@ -8,6 +9,7 @@ declare const _default: {
     tabs: import("./Browser/Tabs").Tabs;
     storage: import("./Browser/storage").Storage;
     window: import("./Browser/Window").windows;
+    windowMessage: typeof windowMessage;
     crypt: typeof crypt;
 };
 export default _default;
