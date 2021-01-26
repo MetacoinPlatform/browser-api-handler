@@ -1,6 +1,6 @@
 {
 	"name": "@metacoin/browser-extensionizer",
-	"version": "0.2.0",
+	"version": "0.2.8",
 	"description": "Metacoin browser extension",
 	"main": "dist/browser-extensionizer.cjs.min.js",
 	"module": "dist/browser-extensionizer.es.min.js",

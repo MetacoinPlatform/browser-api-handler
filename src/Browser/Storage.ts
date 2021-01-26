@@ -1,5 +1,5 @@
-import { EventEmitter } from 'events'
-import { ENUM_STORAGE, ENUM_TYPE } from '../Lib/Enum'
+import {EventEmitter} from 'events'
+import {ENUM_STORAGE, ENUM_TYPE} from '../Lib/Enum'
 
 interface iStorage {
 	changeType(type: ENUM_STORAGE): iStorage
@@ -18,31 +18,23 @@ interface iStorage {
 
 let isAddListener: boolean = false
 export class Storage extends EventEmitter implements iStorage, EventEmitter {
-	static instance: Storage
-
 	private storageType: ENUM_TYPE
 	private supportStorage: boolean
 	private storage: any
 
 	constructor() {
-		if (!Storage.instance) {
-			super()
+		super()
 
-			this.setMaxListeners(100)
+		this.setMaxListeners(100)
 
-			this.storageType = ENUM_TYPE.BRWOSER
-			this.supportStorage = true
+		this.storageType = ENUM_TYPE.BRWOSER
+		this.supportStorage = true
 
-			try {
-				this.changeType(ENUM_STORAGE.LOCAL)
-			} catch (e) {
-				this.changeType(ENUM_STORAGE.LOCALSTORAGE)
-			}
-
-			Storage.instance = this
+		try {
+			this.changeType(ENUM_STORAGE.LOCAL)
+		} catch (e) {
+			this.changeType(ENUM_STORAGE.LOCALSTORAGE)
 		}
-
-		return Storage.instance
 	}
 
 	/**
@@ -104,7 +96,7 @@ export class Storage extends EventEmitter implements iStorage, EventEmitter {
 				resolve()
 			} else {
 				const _key = `${key}`
-				this.storage.set({ [_key]: val }, () => {
+				this.storage.set({[_key]: val}, () => {
 					this.emit('save', {
 						key: _key,
 						val: val,
@@ -184,7 +176,6 @@ export class Storage extends EventEmitter implements iStorage, EventEmitter {
 			} catch (err) {
 				throw err
 			}
-
 		})
 	}
 }

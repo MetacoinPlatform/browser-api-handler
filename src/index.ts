@@ -5,6 +5,7 @@ import notify from './Browser/Notify'
 import alarms from './Browser/Alarms'
 import tabs from './Browser/Tabs'
 import storage from './Browser/Storage'
+import window from './Browser/Window'
 
 import * as crypt from './Lib/Crypt'
 
@@ -16,5 +17,6 @@ export default {
 	notify,
 	tabs,
 	storage,
+	window,
 	crypt
 }

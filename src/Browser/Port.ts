@@ -1,5 +1,5 @@
-import { ENUM_STATUS } from '../Lib/Enum'
-import { encryptValue, decryptValue } from '../Lib/Func'
+import {ENUM_STATUS} from '../Lib/Enum'
+import {encryptValue, decryptValue} from '../Lib/Func'
 
 interface iPortCallbackFunction {
 	port: chrome.runtime.Port
@@ -8,7 +8,7 @@ interface iPortCallbackFunction {
 	sendResult: (result: ENUM_STATUS, msg: any, resData: any) => any
 }
 
-type portCallbackFunction = (data: iPortCallbackFunction & { oriParam: any }) => void
+type portCallbackFunction = (data: iPortCallbackFunction & {oriParam: any}) => void
 
 interface iPort {
 	setTimeout(ms: number)
@@ -22,26 +22,18 @@ interface iPort {
 }
 
 export class Port implements iPort {
-	static instance: Port
-
-	private portMap: { [key: string]: any }
+	private portMap: {[key: string]: any}
 	private __id__: number
 	private __timeout__: number
 
 	private runtime: typeof chrome.runtime | null
 
 	constructor() {
-		if (!Port.instance) {
-			this.__id__ = 0
-			this.__timeout__ = 240000
+		this.__id__ = 0
+		this.__timeout__ = 240000
 
-			this.portMap = {}
-			this.runtime = chrome.runtime || null
-
-			Port.instance = this
-		}
-
-		return Port.instance
+		this.portMap = {}
+		this.runtime = chrome.runtime || null
 	}
 
 	/**
@@ -63,7 +55,7 @@ export class Port implements iPort {
 
 	/**
 	 * 지정된 이름으로 포트를 연결합니다.
-	 * 
+	 *
 	 * @param name 지정된 포트 이름
 	 */
 	connect(name: string): chrome.runtime.Port | null {
@@ -74,7 +66,7 @@ export class Port implements iPort {
 			return this.portMap[name]
 		}
 
-		let port: chrome.runtime.Port | null = this.runtime.connect({ name: name })
+		let port: chrome.runtime.Port | null = this.runtime.connect({name: name})
 		this.portMap[name] = port
 		const removeFunction = () => {
 			let port = this.portMap[name]
@@ -88,7 +80,7 @@ export class Port implements iPort {
 
 	/**
 	 * 연결되어 있는 포트를 닫습니다.
-	 * 
+	 *
 	 * @param name 지정된 포트 이름
 	 */
 	disConnect(name: string): Boolean {
@@ -107,7 +99,7 @@ export class Port implements iPort {
 
 	/**
 	 * 지정된 포트가 닫혔을때 이벤트가 발생합니다.
-	 * 
+	 *
 	 * @param name 지정된 포트 이름
 	 * @param callback 포트가 닫힐 때 발생되는 Callback 함수
 	 */
@@ -131,10 +123,10 @@ export class Port implements iPort {
 
 	/**
 	 * 지정된 포트로 메세지를 발송합니다.
-	 * 
+	 *
 	 * @param name 지정된 포트 이름
 	 * @param method 발생시킬 메소드 명
-	 * @param param 
+	 * @param param
 	 * @param isEncrypt 암호화 여부
 	 * @param response Response를 받아야할 경우 Timeout 시간 만큼 기다립니다.
 	 */
@@ -212,9 +204,9 @@ export class Port implements iPort {
 
 	/**
 	 * 이 이벤트는 포트의 다른 쪽 끝에서 postMessage 를 호출 하면 시작됩니다.
-	 * 
+	 *
 	 * 첫 번째 매개 변수는 메시지이고 두 번째 매개 변수는 메시지를 수신 한 포트입니다.
-	 * 
+	 *
 	 * @param name 지정된 포트 이름
 	 * @param callback 메세지를 받았을 때 발생되는 Callback 함수
 	 */

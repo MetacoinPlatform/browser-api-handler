@@ -1,5 +1,5 @@
-import { ENUM_STATUS } from '../Lib/Enum'
-import { createResult } from '../Lib/Func'
+import {ENUM_STATUS} from '../Lib/Enum'
+import {createResult} from '../Lib/Func'
 
 interface iNotify {
 	setOptions(id: string, options?: chrome.notifications.NotificationOptions)
@@ -29,20 +29,12 @@ interface iNotifyOption {
  * @type/chrome.notifications
  */
 export class Notify implements iNotify {
-	static instance: Notify
-
 	private notify: typeof chrome.notifications
-	private notifyMap: { [name: string]: iNotifyOption }
+	private notifyMap: {[name: string]: iNotifyOption}
 
 	constructor() {
-		if (!Notify.instance) {
-			this.notify = chrome.notifications
-			this.notifyMap = {}
-
-			Notify.instance = this
-		}
-
-		return Notify.instance
+		this.notify = chrome.notifications
+		this.notifyMap = {}
 	}
 
 	private setupNotifyOption(id: string) {
@@ -112,7 +104,7 @@ export class Notify implements iNotify {
 
 	/**
 	 * 클릭시 발생되는 이벤트를 제거합니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
 	removeClicked(id: string): Notify {
@@ -133,7 +125,7 @@ export class Notify implements iNotify {
 
 	/**
 	 * 시스템 또는 사용자 작업에 의해 알림이 닫혔을 때 발생하는 이벤트 입니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 ID 및 사용자에 의해 닫힌 여부를 반환합니다.
 	 */
@@ -161,8 +153,8 @@ export class Notify implements iNotify {
 	}
 
 	/**
-	 * 알림이 닫혔을 때 발생하는 이벤트를 제거합니다. 
-	 * 
+	 * 알림이 닫혔을 때 발생하는 이벤트를 제거합니다.
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
 	removeClosed(id: string): Notify {
@@ -183,7 +175,7 @@ export class Notify implements iNotify {
 
 	/**
 	 * 사용자가 알림에서 버튼을 눌렀을 때 발생하는 이벤트입니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 ID 및 누른 버튼의 Index를 반환합니다.
 	 */
@@ -212,7 +204,7 @@ export class Notify implements iNotify {
 
 	/**
 	 * 버튼을 눌렀을 때 발생하는 이벤트를 제거합니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
 	removeButtonClicked(id: string): Notify {
@@ -233,7 +225,7 @@ export class Notify implements iNotify {
 
 	/**
 	 * 사용자가 권한 수준을 변경합니다. Chrome 47부터는 ChromeOS에만이 이벤트를 전달하는 UI가 있습니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param callback notification의 권한 레벨을 반환합니다.
 	 */
@@ -259,7 +251,7 @@ export class Notify implements iNotify {
 
 	/**
 	 * 권한 수준을 변경 이벤트를 삭제합니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 */
 	removePermissionChanged(id: string): Notify {
@@ -280,10 +272,10 @@ export class Notify implements iNotify {
 
 	/**
 	 * 알림을 만들고 표시합니다.
-	 * 
+	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param options https://developer.chrome.com/docs/extensions/reference/notifications/#type-NotificationOptions 를 참조하세요.
-	 * 
+	 *
 	 * @return Promise - notification ID를 반환합니다.
 	 */
 	create(id: string, options: chrome.notifications.NotificationOptions = {}): Promise<string> {
@@ -309,7 +301,7 @@ export class Notify implements iNotify {
 	 *
 	 * @param id 알림의 식별자입니다. 식별자는 500자를 넘을 수 없습니다.
 	 * @param options https://developer.chrome.com/docs/extensions/reference/notifications/#type-NotificationOptions 를 참조하세요.
-	 * 
+	 *
 	 * @return Promise - Update 여부를 반환합니다.
 	 */
 	update(id: string, options: chrome.notifications.NotificationOptions = {}): Promise<boolean> {

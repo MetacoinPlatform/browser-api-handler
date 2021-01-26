@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events'
+import {EventEmitter} from 'events'
 
 interface iTabInfo {
 	id: number | null
@@ -22,7 +22,7 @@ interface iTabs {
 	getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>
 	getTabs(options: chrome.tabs.QueryInfo | null): Promise<tabResult[]>
 	getActiveTab(index: number): Promise<tabResult>
-	getItems(): Promise<{ [tabId: string]: { info: iTabInfo } }>
+	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}>
 	getActiveItem(): Promise<tabResult | null>
 
 	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs
@@ -63,33 +63,25 @@ let emptyTabResult = {
 }
 
 export class Tabs extends EventEmitter implements iTabs, EventEmitter {
-	static instance: Tabs
-
 	private tabs: typeof chrome.tabs | null
 	private activeId: number | null
-	private tabItems: { [tabId: string]: iTabInfo }
-	private eventsFlagMap: { [key: string]: boolean }
-	private eventsMap: { [key: string]: { [key: string]: Function } }
+	private tabItems: {[tabId: string]: iTabInfo}
+	private eventsFlagMap: {[key: string]: boolean}
+	private eventsMap: {[key: string]: {[key: string]: Function}}
 
 	constructor() {
-		if (!Tabs.instance) {
-			super()
+		super()
 
-			this.setMaxListeners(100)
+		this.setMaxListeners(100)
 
-			this.tabs = chrome.tabs || null
+		this.tabs = chrome.tabs || null
 
-			this.activeId = null
-			this.tabItems = {}
-			this.eventsFlagMap = {}
-			this.eventsMap = {}
+		this.activeId = null
+		this.tabItems = {}
+		this.eventsFlagMap = {}
+		this.eventsMap = {}
 
-			this.init()
-
-			Tabs.instance = this
-		}
-
-		return Tabs.instance
+		this.init()
 	}
 
 	private init() {
@@ -164,7 +156,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 				return
 			}
 
-			let cacheItem = this.tabItems[tab.id] || { origin: null }
+			let cacheItem = this.tabItems[tab.id] || {origin: null}
 			if (cacheItem.origin == info.origin) {
 				return
 			} else if (info != null) {
@@ -197,7 +189,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 			}
 		}, SYSTEM_EVENT_KEY)
 
-		this.getActiveTab().then(({ tab, info }) => {
+		this.getActiveTab().then(({tab, info}) => {
 			if (tab == null) {
 				return
 			}
@@ -293,7 +285,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 								return resolve(emptyTabResult)
 							}
 
-							let tab = tabs[index].tab || { id: null }
+							let tab = tabs[index].tab || {id: null}
 							let tabId = tab.id || null
 							if (tabId == null) {
 								return resolve(emptyTabResult)
@@ -328,7 +320,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	 */
 	async getActiveTab(index: number = 0): Promise<tabResult> {
 		try {
-			return await this.getTabIndex(index, { active: true })
+			return await this.getTabIndex(index, {active: true})
 		} catch (err) {
 			console.warn('BrowserExt: ' + err.message || err)
 			return {
@@ -341,10 +333,10 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	/**
 	 * Returns a list of tabs stored in the class.
 	 */
-	getItems(): Promise<{ [tabId: string]: { info: iTabInfo } }> {
+	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}> {
 		return new Promise(resolve => {
 			setTimeout(() => {
-				let tabItems: { [tabId: string]: { info: iTabInfo } } = {}
+				let tabItems: {[tabId: string]: {info: iTabInfo}} = {}
 				let items = Object.entries(this.tabItems)
 				for (let [k, v] of items) {
 					tabItems[k] = {
