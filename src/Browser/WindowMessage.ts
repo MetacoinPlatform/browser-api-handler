@@ -39,8 +39,6 @@ export default class windowMsg extends EventEmitter implements iWindowMsgEvent, 
 	constructor(name: string, recvName: string) {
 		super()
 
-		this.setMaxListeners(100)
-
 		this.__id__ = 0
 		this.__timeout__ = 360000
 
