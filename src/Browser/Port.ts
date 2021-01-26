@@ -217,12 +217,12 @@ export class Port implements iPort {
 			return
 		}
 
-		let oldId: number = -1
+//		let oldId: number = -1
 		const onPortFunction = (args: any, res: chrome.runtime.Port) => {
 			let _id: number | null = args.__id__ || null
 			let _method: string | null = args.method || null
 			let _data: any = args.param || {}
-
+/*
 			if (_id != null) {
 				if (_id > 1000000000 || _id - oldId < 0) {
 					oldId = 0
@@ -232,7 +232,7 @@ export class Port implements iPort {
 					oldId = _id
 				}
 			}
-
+*/
 			const sendResult = (result: ENUM_STATUS = ENUM_STATUS.SUCCESS, msg: any = null, resData: any = null) => {
 				if (res && res.postMessage) {
 					let resultData = {

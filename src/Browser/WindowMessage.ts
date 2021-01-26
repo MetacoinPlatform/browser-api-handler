@@ -133,7 +133,6 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 
 		this.isRun = true
 
-		let oldId: number = -1
 		const loadMessage = e => {
 			this.emit('load', {name: this.name, data: null, event: e})
 		}
@@ -146,16 +145,6 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 
 			let _id: number | null = args.__id__ || null
 			let _method: string | null = args.method || null
-			if (_id != null) {
-				if (_id > 1000000000 || _id - oldId < 0) {
-					oldId = 0
-				} else if (oldId > 0 && oldId >= _id) {
-					return
-				} else {
-					oldId = _id
-				}
-			}
-
 			const sendResult = (method: string, data: any) => {
 				window.postMessage(
 					{
