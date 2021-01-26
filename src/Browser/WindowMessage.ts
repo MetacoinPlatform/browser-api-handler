@@ -9,6 +9,15 @@ interface iEventData {
 	sendResult: (data: any) => void | null
 }
 
+interface iResonse {
+	__id__: string | number,
+	name: string,
+	method: string,
+	status: string | symbol | EMIT_TYPE,
+	msg?: any,
+	data?: any,
+}
+
 enum EMIT_TYPE {
 	LOAD = 'load',
 	MESSAGE = 'message',
@@ -19,7 +28,7 @@ interface iWindowMsgEvent {
 	shouldWindow(): boolean
 	on(event: string | symbol | EMIT_TYPE, listener: (data: iEventData, ...args: any[]) => void)
 	setTimeout(ms: number)
-	send(method: string, param: any, response?: Function): void
+	send(method: string, param?: any, response?: ((data: iResonse) => void) | null): void
 }
 
 export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmitter {
@@ -202,7 +211,7 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 	 * @param param 전달할 임의의 데이터
 	 * @param response Response를 받아야할 경우 Timeout 시간 만큼 기다립니다.
 	 */
-	send(method: string, param: any = {}, response: Function | null = null): void {
+	send(method: string, param: any = {}, response: ((data: iResonse) => void) | null): void {
 		if (!this.isRun || !this.shouldWindow) {
 			throw new Error('DappSDK: Wait for connect.')
 		}
