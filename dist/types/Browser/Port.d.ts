@@ -30,7 +30,7 @@ export declare class Port implements iPort {
     send(name: string, method: string, param?: any, isEncrypt?: boolean, response?: Function | null): Promise<void>;
     on(name: string, callback: portCallbackFunction): {
         removeListener: () => void;
-    } | undefined;
+    } | null;
 }
 declare const _default: Port;
 export default _default;
