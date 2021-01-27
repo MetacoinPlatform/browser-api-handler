@@ -222,7 +222,7 @@ export class Port implements iPort {
 		const onPortFunction = (args: any, res: chrome.runtime.Port) => {
 			let _id: number | null = args.__id__ || null
 			let _method: string | null = args.method || null
-			let _data: any = args.param || {}
+			let _data: any = args.param
 /*
 			if (_id != null) {
 				if (_id > 1000000000 || _id - oldId < 0) {
@@ -252,7 +252,7 @@ export class Port implements iPort {
 			}
 
 			let data = _data
-			if (_data.isEncrypt === true) {
+			if (typeof _data === 'object' && _data.isEncrypt === true) {
 				const encryptDataCallback = async () => {
 					try {
 						data = await decryptValue(_id || 0, _data)

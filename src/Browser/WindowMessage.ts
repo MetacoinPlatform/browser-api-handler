@@ -160,7 +160,7 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 			this.emit('message', {
 				name: this.name,
 				method: _method,
-				data: _data.data || null,
+				data: _data.data,
 				event: args,
 				sendResult: sendResult,
 			})
@@ -268,7 +268,7 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 					__id__: _id,
 					name: this.recvName,
 					method: method,
-					data: param || null,
+					data: param,
 				},
 				window.origin || '*',
 			)

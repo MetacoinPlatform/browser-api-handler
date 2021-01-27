@@ -86,7 +86,7 @@ export class Message implements iMessage {
 			try {
 				let _id: string = `s:${method}${makeid(6)}`
 				let data = param
-				if (isEncrypt) {
+				if (isEncrypt && param) {
 					data = await encryptValue(_id, param)
 				}
 
@@ -143,7 +143,7 @@ export class Message implements iMessage {
 				}
 
 				let data = _data
-				if (_data.isEncrypt === true) {
+				if (typeof _data === 'object' && _data.isEncrypt === true) {
 					const encryptDataCallback = async () => {
 						try {
 							data = await decryptValue(_id || 0, _data)
@@ -203,7 +203,7 @@ export class Message implements iMessage {
 		const onEventFunction = (req: any, sender: chrome.runtime.MessageSender, res: (response?: any) => void) => {
 			let _id: string | null = req.__id__ || null
 			let _method: string | null = req.method || null
-			let _data: any = req.param || {}
+			let _data: any = req.param
 
 			if (extId && sender.id != extId) {
 				return true
@@ -219,7 +219,7 @@ export class Message implements iMessage {
 				}
 
 				let data = _data
-				if (_data.isEncrypt === true) {
+				if (typeof _data === 'object' && _data.isEncrypt === true) {
 					const encryptDataCallback = async () => {
 						try {
 							data = await decryptValue(_id || 0, _data)
