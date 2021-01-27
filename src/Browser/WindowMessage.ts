@@ -143,8 +143,8 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 				return
 			}
 
-			let _id: number | null = args.__id__ || null
-			let _method: string | null = args.method || null
+			let _id: number | null = _data.__id__ || null
+			let _method: string | null = _data.method || null
 			const sendResult = (method: string, data: any) => {
 				window.postMessage(
 					{
