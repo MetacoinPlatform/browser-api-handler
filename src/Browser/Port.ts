@@ -211,10 +211,11 @@ export class Port implements iPort {
 	 * @param callback 메세지를 받았을 때 발생되는 Callback 함수
 	 */
 	on(name: string, callback: portCallbackFunction) {
-		let port: chrome.runtime.Port | null = this.connect(name)
-		if (!port) {
-			console.warn(`BrowserExt: Not found connect port name "${name}"`)
-			return
+		if (!this.runtime) {
+			console.warn('BrowserExt: Not found browser API.')
+			return null
+		} else if (name.length < 1) {
+			name = '*'
 		}
 
 //		let oldId: number = -1
@@ -260,7 +261,7 @@ export class Port implements iPort {
 					}
 
 					callback({
-						port: port as chrome.runtime.Port,
+						port: res,
 						method: _method,
 						oriParam: args,
 						param: data,
@@ -271,7 +272,7 @@ export class Port implements iPort {
 				encryptDataCallback()
 			} else {
 				callback({
-					port: port as chrome.runtime.Port,
+					port: res,
 					method: _method,
 					oriParam: args,
 					param: data,
@@ -282,11 +283,24 @@ export class Port implements iPort {
 			return true
 		}
 
-		port.onMessage.addListener(onPortFunction)
+		const onConnectFunction = (sendPort: chrome.runtime.Port) => {
+			if (name != '*' && sendPort.name != name) {
+				return true
+			}
+
+			sendPort.onDisconnect.addListener(() => {
+				sendPort.onMessage.removeListener(onPortFunction)
+				this.portMap[name] = null
+			})
+
+			sendPort.onMessage.addListener(onPortFunction)
+		}
+
+		this.runtime.onConnect.addListener(onConnectFunction)
 
 		return {
 			removeListener: () => {
-				port?.onMessage.removeListener(onPortFunction)
+				this.runtime?.onConnect.removeListener(onConnectFunction)
 			},
 		}
 	}

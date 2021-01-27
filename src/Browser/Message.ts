@@ -148,7 +148,7 @@ export class Message implements iMessage {
 						try {
 							data = await decryptValue(_id || 0, _data)
 						} catch (err) {
-							throw err
+							return false
 						}
 
 						callback({
