@@ -252,7 +252,7 @@ export class Port implements iPort {
 			}
 
 			let data = _data
-			if (typeof _data === 'object' && _data.isEncrypt === true) {
+			if (_data && typeof _data === 'object' && _data.isEncrypt === true) {
 				const encryptDataCallback = async () => {
 					try {
 						data = await decryptValue(_id || 0, _data)
