@@ -49,7 +49,7 @@ export const makeid = (length: number, isMs: boolean = true) => {
 export const encryptValue = async (id: string | number, param: any): Promise<Object | null> => {
 	let cryptKey = Hash('sha256', Math.random() + Date.now())
 	try {
-		await storage.save(`cryptMsg:${id}`, cryptKey)
+		await storage.save(`blockdata:${id}`, cryptKey)
 	} catch (err) {
 		throw err
 	}
@@ -84,13 +84,13 @@ export const encryptValue = async (id: string | number, param: any): Promise<Obj
 export const decryptValue = async (id: string | number, data: any): Promise<Object | null> => {
 	let cryptKey: string | null = null
 	try {
-		cryptKey = await storage.loadRemove(`cryptMsg:${id}`)
+		cryptKey = await storage.loadRemove(`blockdata:${id}`)
 	} catch (err) {
 		throw err
 	}
 
 	if (!cryptKey) {
-		throw new Error('BrowserExt: Not found port cryptMSg')
+		throw new Error('BrowserExt: Not found port crypt')
 	}
 
 	let deData = {}
