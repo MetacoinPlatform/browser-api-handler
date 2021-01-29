@@ -270,7 +270,7 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 					method: method,
 					data: param,
 				},
-				window.origin || '*',
+				origin,
 			)
 		} catch (err) {
 			throw err
