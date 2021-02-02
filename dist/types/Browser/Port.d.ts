@@ -6,6 +6,10 @@ interface iPortCallbackFunction {
     param: any;
     sendResult: (result: ENUM_STATUS, msg: any, resData: any) => any;
 }
+interface iPortConnectCallbackFunction {
+    name: string;
+    port: chrome.runtime.Port;
+}
 declare type portCallbackFunction = (data: iPortCallbackFunction & {
     oriParam: any;
 }) => void;
@@ -16,6 +20,7 @@ interface iPort {
     onDisconnect(name: string, callback: (port: chrome.runtime.Port) => void): any;
     send(name: string, method: string, param?: any, isEncrypt?: boolean, response?: Function | null): void;
     on(name: string, callback: portCallbackFunction): void;
+    onConnect(name: string, connectCallback: (data: iPortConnectCallbackFunction) => void, disconnectCallback: (data: iPortConnectCallbackFunction) => void): any;
 }
 export declare class Port implements iPort {
     private portMap;
@@ -28,7 +33,8 @@ export declare class Port implements iPort {
     disConnect(name: string): Boolean;
     onDisconnect(name: string, callback: (port: chrome.runtime.Port) => void): Port;
     send(name: string, method: string, param?: any, isEncrypt?: boolean, response?: Function | null): Promise<void>;
-    on(name: string, callback: portCallbackFunction): {
+    on(name: string, callback: portCallbackFunction): null | undefined;
+    onConnect(name: string, connectCallback: (data: iPortConnectCallbackFunction) => void, disconnectCallback: (data: iPortConnectCallbackFunction) => void): {
         removeListener: () => void;
     } | null;
 }
