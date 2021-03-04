@@ -35,7 +35,9 @@ interface iTabs {
     removeRemoved(key: string): iTabs;
 }
 export declare class Tabs extends EventEmitter implements iTabs, EventEmitter {
+    private windows;
     private tabs;
+    currentWindowId: number | null;
     private activeId;
     private tabItems;
     private eventsFlagMap;
