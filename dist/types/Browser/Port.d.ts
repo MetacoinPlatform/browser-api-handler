@@ -5,6 +5,9 @@ interface iPortCallbackFunction {
     method: string | null;
     param: any;
     sendResult: (result: ENUM_STATUS, msg: any, resData: any) => any;
+    send: (data: {
+        [key: string]: any;
+    }) => any;
 }
 interface iPortConnectCallbackFunction {
     name: string;
