@@ -228,6 +228,16 @@ export class windowMsg
 		let origin = window.origin || '*'
 
 		try {
+			window.postMessage(
+				{
+					__id__: _id,
+					name: this.recvName,
+					method: method,
+					data: param,
+				},
+				origin,
+			)
+
 			if (response != null) {
 				let isResponse = false
 				const resultCallback = (res: any) => {
@@ -277,16 +287,6 @@ export class windowMsg
 					})
 				}, this.__timeout__)
 			}
-
-			window.postMessage(
-				{
-					__id__: _id,
-					name: this.recvName,
-					method: method,
-					data: param,
-				},
-				origin,
-			)
 		} catch (err) {
 			throw err
 		}
