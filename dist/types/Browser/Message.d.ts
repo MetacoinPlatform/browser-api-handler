@@ -6,6 +6,9 @@ interface iOnCallbackFunction {
     oriParam: any;
     sender: chrome.runtime.MessageSender;
     sendResult: (result: ENUM_STATUS, msg: any, data: any) => any;
+    send: (data: {
+        [key: string]: any;
+    }) => any;
 }
 interface iMessage {
     send(method: string, param?: any, isEncrypt?: boolean): Promise<any>;
