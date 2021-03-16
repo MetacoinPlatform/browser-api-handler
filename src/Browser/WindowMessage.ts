@@ -266,7 +266,7 @@ export class windowMsg
 							method: method,
 							status: ENUM_STATUS.SUCCESS,
 							msg: null,
-							data: param || null,
+							data: _data || null,
 						})
 					}
 				}
