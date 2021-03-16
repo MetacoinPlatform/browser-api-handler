@@ -19,15 +19,24 @@ interface tabResult {
 interface iTabs {
 	getInfo(tab: chrome.tabs.Tab): iTabInfo
 	getTab(tabId: number): Promise<tabResult>
-	getTabIndex(index: number, options: chrome.tabs.QueryInfo | null): Promise<tabResult>
+	getTabIndex(
+		index: number,
+		options: chrome.tabs.QueryInfo | null,
+	): Promise<tabResult>
 	getTabs(options: chrome.tabs.QueryInfo | null): Promise<tabResult[]>
 	getActiveTab(index: number): Promise<tabResult>
 	getItems(): Promise<{[tabId: string]: {info: iTabInfo}}>
 	getActiveItem(): Promise<tabResult | null>
 
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs
+	onActivated(
+		callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void,
+		key: string,
+	): iTabs
 	removeActivated(key: string): iTabs
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string): iTabs
+	onUpdated(
+		callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void,
+		key: string,
+	): iTabs
 	removeUpdated(key: string): iTabs
 	onRemoved(callback: (tabId: number) => void, key: string): iTabs
 	removeRemoved(key: string): iTabs
@@ -63,7 +72,9 @@ let emptyTabResult = {
 }
 
 export class Tabs extends EventEmitter implements iTabs, EventEmitter {
+	private windows: typeof chrome.windows | null
 	private tabs: typeof chrome.tabs | null
+	public currentWindowId: number | null
 	private activeId: number | null
 	private tabItems: {[tabId: string]: iTabInfo}
 	private eventsFlagMap: {[key: string]: boolean}
@@ -75,6 +86,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 		this.setMaxListeners(100)
 
 		this.tabs = chrome.tabs || null
+		this.windows = chrome.windows || null
 
 		this.activeId = null
 		this.tabItems = {}
@@ -86,6 +98,51 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 
 	private init() {
 		if (this.tabs) {
+			if (this.windows) {
+				this.windows.getCurrent(
+					{
+						windowTypes: ['normal'],
+					},
+					item => {
+						if (item.id) {
+							this.currentWindowId = item.id || null
+						}
+					},
+				)
+				this.windows.onFocusChanged.addListener(id => {
+					this.currentWindowId = id || null
+
+					this.getActiveTab().then(({tab, info}) => {
+						if (tab == null) {
+							return
+						}
+
+						if (tab.active) {
+							this.activeId = tab.id || null
+						}
+
+						if (!tab.id) {
+							return
+						}
+
+						if (info != null) {
+							this.tabItems[tab.id] = info
+						}
+
+						if (tab.active) {
+							this.emit('active', {
+								tab: tab,
+								info: info,
+							})
+						}
+						this.emit('change', {
+							tab: tab,
+							info: info,
+						})
+					})
+				})
+			}
+
 			this.tabs.query({}, tabs => {
 				tabs.map(tab => {
 					if (tab == null) {
@@ -263,7 +320,10 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	 *
 	 * @param {number} index
 	 */
-	getTabIndex(index: number = 0, options: chrome.tabs.QueryInfo | null = null): Promise<tabResult> {
+	getTabIndex(
+		index: number = 0,
+		options: chrome.tabs.QueryInfo | null = null,
+	): Promise<tabResult> {
 		return new Promise((resolve, reject) => {
 			if (!this.tabs) {
 				console.warn('BrowserExt: Not support chrome.tabs')
@@ -320,7 +380,16 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	 */
 	async getActiveTab(index: number = 0): Promise<tabResult> {
 		try {
-			return await this.getTabIndex(index, {active: true})
+			let options: chrome.tabs.QueryInfo = {
+				active: true,
+			}
+			if (this.currentWindowId) {
+				options.windowId = this.currentWindowId
+			} else {
+				options.currentWindow = true
+			}
+
+			return await this.getTabIndex(index, options)
 		} catch (err) {
 			console.warn('BrowserExt: ' + err.message || err)
 			return {
@@ -417,7 +486,10 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onActivated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): Tabs {
+	onActivated(
+		callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void,
+		key: string = 'init',
+	): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this
@@ -493,7 +565,10 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 	 * @param {Function} callback
 	 * @param {string} key optional
 	 */
-	onUpdated(callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void, key: string = 'init'): Tabs {
+	onUpdated(
+		callback: (tab: chrome.tabs.Tab, info: iTabInfo) => void,
+		key: string = 'init',
+	): Tabs {
 		if (!this.tabs) {
 			console.warn('BrowserExt: Not support chrome.tabs')
 			return this

@@ -10,12 +10,12 @@ interface iEventData {
 }
 
 interface iResonse {
-	__id__: string | number,
-	name: string,
-	method: string,
-	status: string | symbol | EMIT_TYPE,
-	msg?: any,
-	data?: any,
+	__id__: string | number
+	name: string
+	method: string
+	status: string | symbol | EMIT_TYPE
+	msg?: any
+	data?: any
 }
 
 enum EMIT_TYPE {
@@ -26,12 +26,21 @@ enum EMIT_TYPE {
 
 interface iWindowMsgEvent {
 	shouldWindow(): boolean
-	on(event: string | symbol | EMIT_TYPE, listener: (data: iEventData, ...args: any[]) => void)
+	on(
+		event: string | symbol | EMIT_TYPE,
+		listener: (data: iEventData, ...args: any[]) => void,
+	)
 	setTimeout(ms: number)
-	send(method: string, param?: any, response?: ((data: iResonse) => void) | null): void
+	send(
+		method: string,
+		param?: any,
+		response?: ((data: iResonse) => void) | null,
+	): void
 }
 
-export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmitter {
+export class windowMsg
+	extends EventEmitter
+	implements iWindowMsgEvent, EventEmitter {
 	private isRun: boolean
 	private replay: number
 
@@ -63,7 +72,9 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 	 * @returns {boolean} {@code true} Whether the provider should be injected
 	 */
 	shouldWindow() {
-		return this.doctypeCheck() && this.suffixCheck() && this.documentElementCheck()
+		return (
+			this.doctypeCheck() && this.suffixCheck() && this.documentElementCheck()
+		)
 	}
 
 	/**
@@ -200,7 +211,11 @@ export class windowMsg extends EventEmitter implements iWindowMsgEvent, EventEmi
 	 * @param param 전달할 임의의 데이터
 	 * @param response Response를 받아야할 경우 Timeout 시간 만큼 기다립니다.
 	 */
-	send(method: string, param: any = {}, response: ((data: iResonse) => void) | null): void {
+	send(
+		method: string,
+		param: any = {},
+		response: ((data: iResonse) => void) | null,
+	): void {
 		if (!this.isRun || !this.shouldWindow) {
 			throw new Error('DappSDK: Wait for connect.')
 		}

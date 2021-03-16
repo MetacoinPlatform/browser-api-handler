@@ -6,6 +6,12 @@ interface iPortCallbackFunction {
 	method: string | null
 	param: any
 	sendResult: (result: ENUM_STATUS, msg: any, resData: any) => any
+	send: (data: {[key:string]:any}) => any
+}
+
+interface iPortConnectCallbackFunction {
+	name: string
+	port: chrome.runtime.Port
 }
 
 type portCallbackFunction = (data: iPortCallbackFunction & {oriParam: any}) => void
@@ -19,6 +25,7 @@ interface iPort {
 
 	send(name: string, method: string, param?: any, isEncrypt?: boolean, response?: Function | null): void
 	on(name: string, callback: portCallbackFunction): void
+	onConnect(name: string, connectCallback: (data: iPortConnectCallbackFunction) => void, disconnectCallback: (data: iPortConnectCallbackFunction) => void): any
 }
 
 export class Port implements iPort {
@@ -218,12 +225,12 @@ export class Port implements iPort {
 			name = '*'
 		}
 
-//		let oldId: number = -1
+		//		let oldId: number = -1
 		const onPortFunction = (args: any, res: chrome.runtime.Port) => {
 			let _id: number | null = args.__id__ || null
 			let _method: string | null = args.method || null
 			let _data: any = args.param
-/*
+			/*
 			if (_id != null) {
 				if (_id > 1000000000 || _id - oldId < 0) {
 					oldId = 0
@@ -251,6 +258,19 @@ export class Port implements iPort {
 				}
 			}
 
+			const send = (data: {[key: string]: any}) => {
+				if (res && res.postMessage) {
+					let resultData = Object.assign({}, data)
+					resultData.name = name
+					resultData.method = _method
+					if (_id != null) {
+						resultData['__id__'] = _id
+					}
+
+					res.postMessage(resultData)
+				}
+			}
+
 			let data = _data
 			if (_data && typeof _data === 'object' && _data.isEncrypt === true) {
 				const encryptDataCallback = async () => {
@@ -266,6 +286,7 @@ export class Port implements iPort {
 						oriParam: args,
 						param: data,
 						sendResult,
+						send
 					})
 				}
 
@@ -277,10 +298,35 @@ export class Port implements iPort {
 					oriParam: args,
 					param: data,
 					sendResult,
+					send
 				})
 			}
 
 			return true
+		}
+
+		this.onConnect(name, ({port}) => {
+			port.onMessage.addListener(onPortFunction)
+		}, ({ port }) => {
+			port.onMessage.removeListener(onPortFunction)
+			this.portMap[name] = null
+		})
+	}
+
+
+	/**
+	 * 확장 프로세스 또는 콘텐츠 스크립트 (by connect) 에서 연결되면 시작됩니다 .
+	 *
+	 * @param name 지정된 포트 이름
+	 * @param connectCallback 연결이 되었을때 실행됩니다.
+	 * @param disconnectCallback 연결이 끊겼을때 실행됩니다.
+	 */
+	onConnect(name: string, connectCallback: (data: iPortConnectCallbackFunction) => void, disconnectCallback: (data: iPortConnectCallbackFunction) => void) {
+		if (!this.runtime) {
+			console.warn('BrowserExt: Not found browser API.')
+			return null
+		} else if (name.length < 1) {
+			name = '*'
 		}
 
 		const onConnectFunction = (sendPort: chrome.runtime.Port) => {
@@ -289,11 +335,10 @@ export class Port implements iPort {
 			}
 
 			sendPort.onDisconnect.addListener(() => {
-				sendPort.onMessage.removeListener(onPortFunction)
-				this.portMap[name] = null
+				disconnectCallback({ name: name, port: sendPort })
 			})
 
-			sendPort.onMessage.addListener(onPortFunction)
+			connectCallback({ name: name, port: sendPort })
 		}
 
 		this.runtime.onConnect.addListener(onConnectFunction)

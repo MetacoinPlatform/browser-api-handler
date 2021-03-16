@@ -7,14 +7,26 @@ interface iOnCallbackFunction {
 	oriParam: any
 	sender: chrome.runtime.MessageSender
 	sendResult: (result: ENUM_STATUS, msg: any, data: any) => any
+	send: (data: {[key: string]: any}) => any
 }
 
 interface iMessage {
 	send(method: string, param?: any, isEncrypt?: boolean): Promise<any>
-	sendTab(tabId: number, method: string, param?: any, isEncrypt?: boolean): Promise<any>
+	sendTab(
+		tabId: number,
+		method: string,
+		param?: any,
+		isEncrypt?: boolean,
+	): Promise<any>
 
-	on(callback: (data: iOnCallbackFunction) => void, extId?: string): object | null
-	onExternal(callback: (data: iOnCallbackFunction) => void, extId?: string): object | null
+	on(
+		callback: (data: iOnCallbackFunction) => void,
+		extId?: string,
+	): object | null
+	onExternal(
+		callback: (data: iOnCallbackFunction) => void,
+		extId?: string,
+	): object | null
 }
 
 export class Message implements iMessage {
@@ -35,7 +47,11 @@ export class Message implements iMessage {
 	 * @param param
 	 * @param isEncrypt Parameters 암호화 여부
 	 */
-	send(method: string, param: any = {}, isEncrypt: boolean = false): Promise<any> {
+	send(
+		method: string,
+		param: any = {},
+		isEncrypt: boolean = false,
+	): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (!this.runtime) {
 				return reject()
@@ -77,7 +93,12 @@ export class Message implements iMessage {
 	 * @param param
 	 * @param isEncrypt Parameters 암호화 여부
 	 */
-	async sendTab(tabId: number, method: string, param: any = {}, isEncrypt: boolean = false): Promise<any> {
+	async sendTab(
+		tabId: number,
+		method: string,
+		param: any = {},
+		isEncrypt: boolean = false,
+	): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (!this.tabs) {
 				return reject()
@@ -116,7 +137,10 @@ export class Message implements iMessage {
 	 * @param callback On 이벤트 함수, 반드시 sendResult를 호출해야됩니다.
 	 * @param extId 특정 app extension id를 입력시 해당 id와 매치된 메세지만 callback을 실행합니다.
 	 */
-	on(callback: (data: iOnCallbackFunction) => void, extId: string = ''): object | null {
+	on(
+		callback: (data: iOnCallbackFunction) => void,
+		extId: string = '',
+	): object | null {
 		if (!this.runtime) {
 			console.warn('BrowserExt: Not found browser API.')
 			return null
@@ -124,7 +148,11 @@ export class Message implements iMessage {
 			extId = this.runtime.id
 		}
 
-		const onEventFunction = (req: any, sender: chrome.runtime.MessageSender, res: (response?: any) => void) => {
+		const onEventFunction = (
+			req: any,
+			sender: chrome.runtime.MessageSender,
+			res: (response?: any) => void,
+		) => {
 			let _id: string | null = req.__id__ || null
 			let _method: string | null = req.method || null
 			let _data: any = req.param || {}
@@ -134,12 +162,20 @@ export class Message implements iMessage {
 			}
 
 			try {
-				const sendResult = (result: ENUM_STATUS, msg: any = null, resData: any = null) => {
+				const sendResult = (
+					result: ENUM_STATUS,
+					msg: any = null,
+					resData: any = null,
+				) => {
 					return res({
 						result: result,
 						msg: msg,
 						data: resData,
 					})
+				}
+
+				const send = (data: {[key: string]: any}) => {
+					return res(data)
 				}
 
 				let data = _data
@@ -157,6 +193,7 @@ export class Message implements iMessage {
 							oriParam: req,
 							param: data,
 							sendResult,
+							send,
 						})
 					}
 
@@ -168,6 +205,7 @@ export class Message implements iMessage {
 						oriParam: req,
 						param: data,
 						sendResult,
+						send,
 					})
 				}
 			} catch (err) {
@@ -192,7 +230,10 @@ export class Message implements iMessage {
 	 * @param callback On 이벤트 함수, 반드시 sendResult를 호출해야됩니다.
 	 * @param extId 특정 app extension id를 입력시 해당 id와 매치된 메세지만 callback을 실행합니다.
 	 */
-	onExternal(callback: (data: iOnCallbackFunction) => void, extId: string = ''): object | null {
+	onExternal(
+		callback: (data: iOnCallbackFunction) => void,
+		extId: string = '',
+	): object | null {
 		if (!this.runtime) {
 			console.warn('BrowserExt: Not found browser API.')
 			return null
@@ -200,7 +241,11 @@ export class Message implements iMessage {
 			extId = this.runtime.id
 		}
 
-		const onEventFunction = (req: any, sender: chrome.runtime.MessageSender, res: (response?: any) => void) => {
+		const onEventFunction = (
+			req: any,
+			sender: chrome.runtime.MessageSender,
+			res: (response?: any) => void,
+		) => {
 			let _id: string | null = req.__id__ || null
 			let _method: string | null = req.method || null
 			let _data: any = req.param
@@ -210,12 +255,20 @@ export class Message implements iMessage {
 			}
 
 			try {
-				const sendResult = (result: ENUM_STATUS, msg: any = null, resData: any = null) => {
+				const sendResult = (
+					result: ENUM_STATUS,
+					msg: any = null,
+					resData: any = null,
+				) => {
 					return res({
 						result: result,
 						msg: msg,
 						data: resData,
 					})
+				}
+
+				const send = (data: {[key: string]: any}) => {
+					return res(data)
 				}
 
 				let data = _data
@@ -233,6 +286,7 @@ export class Message implements iMessage {
 							oriParam: req,
 							param: data,
 							sendResult,
+							send,
 						})
 					}
 
@@ -244,6 +298,7 @@ export class Message implements iMessage {
 						oriParam: req,
 						param: data,
 						sendResult,
+						send,
 					})
 				}
 			} catch (err) {
