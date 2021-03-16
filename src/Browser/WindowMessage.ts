@@ -246,7 +246,7 @@ export class windowMsg
 					}
 
 					let _data: any = res.data || {}
-					if (_data.name != this.recvName) {
+					if (_data.name != this.name) {
 						return
 					} else if (!_data.__id__) {
 						return
