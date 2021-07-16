@@ -1,4 +1,3 @@
-import windowMessage from './Browser/WindowMessage';
 import * as crypt from './Lib/Crypt';
 declare const _default: {
     runtime: import("./Browser/Runtime").Runtime;
@@ -6,10 +5,10 @@ declare const _default: {
     port: import("./Browser/Port").Port;
     alarms: import("./Browser/Alarms").Alarms;
     notify: import("./Browser/Notify").Notify;
-    tabs: import("./Browser/Tabs").Tabs;
-    storage: import("./Browser/storage").Storage;
+    tabs: () => import("./Browser/Tabs").Tabs;
+    storage: import("./Browser/Storage").Storage;
     window: import("./Browser/Window").windows;
-    windowMessage: typeof windowMessage;
+    windowMessage: (name: string, recvName: string) => import("./Browser/WindowMessage").windowMsg;
     crypt: typeof crypt;
 };
 export default _default;
