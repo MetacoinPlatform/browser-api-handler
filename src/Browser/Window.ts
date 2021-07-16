@@ -1,6 +1,6 @@
-import {EventEmitter} from 'events'
-import {ENUM_STATUS} from '../Lib/Enum'
-import {createResult} from '../Lib/Func'
+import { EventEmitter } from 'events'
+import { ENUM_STATUS } from '../Lib/Enum'
+import { createResult } from '../Lib/Func'
 
 export interface iWindows {
 	get(name: string): chrome.windows.Window | null
@@ -11,8 +11,8 @@ export interface iWindows {
 	close(windowId: number)
 }
 
-let itemsIds: {[key: number]: {_name: string} & chrome.windows.Window} = {}
-let itemsName: {[key: string]: chrome.windows.Window} = {}
+let itemsIds: { [key: number]: { _name: string } & chrome.windows.Window } = {}
+let itemsName: { [key: string]: chrome.windows.Window } = {}
 
 export class windows extends EventEmitter implements iWindows, EventEmitter {
 	private window: typeof chrome.windows | null
@@ -99,23 +99,28 @@ export class windows extends EventEmitter implements iWindows, EventEmitter {
 			})
 		}
 
-		if (isOnce && itemsName[name] !== undefined) {
-			this.window.update(itemsName[name].id, {focused: true})
-			this.emit('update', itemsIds[itemsName[name].id])
+		let windowItem: chrome.windows.Window = itemsName[name]
+		if (isOnce && windowItem !== undefined && windowItem.id) {
+			this.window.update(windowItem.id, { focused: true })
+			this.emit('update', itemsIds[windowItem.id])
 		} else if (isOnce) {
 			this.window.create(options, win => {
 				if (win !== undefined) {
-					itemsName[name] = win
-					itemsIds[win.id] = Object.assign({_name: name}, win)
-					this.emit('create', itemsIds[win.id])
+					windowItem = win
+					if (win.id) {
+						itemsIds[win.id] = Object.assign({ _name: name }, win)
+						this.emit('create', itemsIds[win.id])
+					}
 				}
 			})
 		} else {
 			this.window.create(options, win => {
 				if (win !== undefined) {
-					itemsName[name] = win
-					itemsIds[win.id] = Object.assign({_name: name}, win)
-					this.emit('create', itemsIds[win.id])
+					windowItem = win
+					if (win.id) {
+						itemsIds[win.id] = Object.assign({ _name: name }, win)
+						this.emit('create', itemsIds[win.id])
+					}
 				}
 			})
 		}
