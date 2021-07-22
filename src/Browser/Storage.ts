@@ -18,17 +18,14 @@ interface iStorage {
 
 let isAddListener: boolean = false
 export class Storage extends EventEmitter implements iStorage, EventEmitter {
-	private storageType: ENUM_TYPE
-	private supportStorage: boolean
+	private storageType: ENUM_TYPE = ENUM_TYPE.BRWOSER
+	private supportStorage: boolean = true
 	private storage: any
 
 	constructor() {
 		super()
 
 		this.setMaxListeners(100)
-
-		this.storageType = ENUM_TYPE.BRWOSER
-		this.supportStorage = true
 
 		try {
 			this.changeType(ENUM_STORAGE.LOCAL)
@@ -60,7 +57,11 @@ export class Storage extends EventEmitter implements iStorage, EventEmitter {
 				this.storageType = ENUM_TYPE.BRWOSER
 				this.storage = chrome.storage.local
 			} else {
-				//throw new Error('Unknwon Storage type')
+				throw new Error('Unknwon Storage type')
+			}
+
+			if (!this.storage) {
+				throw new Error('Not supported storage')
 			}
 
 			if (this.storageType == ENUM_TYPE.BRWOSER) {
