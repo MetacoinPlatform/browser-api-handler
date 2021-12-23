@@ -131,7 +131,7 @@ export class Storage extends EventEmitter implements iStorage, EventEmitter {
 							val: items[_key],
 						})
 						resolve(items[_key])
-					} catch (err) {
+					} catch (err: any) {
 						resolve(undefined)
 					}
 				})
@@ -159,7 +159,7 @@ export class Storage extends EventEmitter implements iStorage, EventEmitter {
 							key: _key as string,
 						})
 						resolve(items[_key])
-					} catch (err) {
+					} catch (err: any) {
 						resolve(undefined)
 					}
 				})
@@ -174,7 +174,7 @@ export class Storage extends EventEmitter implements iStorage, EventEmitter {
 				await this.remove(key)
 
 				resolve(val)
-			} catch (err) {
+			} catch (err: any) {
 				throw err
 			}
 		})

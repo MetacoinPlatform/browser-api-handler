@@ -77,7 +77,7 @@ export class Message implements iMessage {
 						resolve(res)
 					},
 				)
-			} catch (err) {
+			} catch (err: any) {
 				reject(err)
 			}
 		})
@@ -125,7 +125,7 @@ export class Message implements iMessage {
 						resolve(res)
 					},
 				)
-			} catch (err) {
+			} catch (err: any) {
 				reject(err)
 			}
 		})
@@ -183,7 +183,7 @@ export class Message implements iMessage {
 					const encryptDataCallback = async () => {
 						try {
 							data = await decryptValue(_id || 0, _data)
-						} catch (err) {
+						} catch (err: any) {
 							return false
 						}
 
@@ -208,7 +208,7 @@ export class Message implements iMessage {
 						send,
 					})
 				}
-			} catch (err) {
+			} catch (err: any) {
 				//
 			}
 
@@ -276,7 +276,7 @@ export class Message implements iMessage {
 					const encryptDataCallback = async () => {
 						try {
 							data = await decryptValue(_id || 0, _data)
-						} catch (err) {
+						} catch (err: any) {
 							throw err
 						}
 
@@ -301,7 +301,7 @@ export class Message implements iMessage {
 						send,
 					})
 				}
-			} catch (err) {
+			} catch (err: any) {
 				//
 			}
 

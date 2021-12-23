@@ -241,7 +241,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 					})
 					delete this.tabItems[tabId]
 				}
-			} catch (err) {
+			} catch (err: any) {
 				//
 			}
 		}, SYSTEM_EVENT_KEY)
@@ -304,10 +304,10 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 							info: tabInfo,
 						})
 					})
-				} catch (err) {
+				} catch (err: any) {
 					reject(err)
 				}
-			} catch (err) {
+			} catch (err: any) {
 				reject(err)
 			}
 		})
@@ -358,14 +358,14 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 									info: tabInfo,
 								})
 							})
-						} catch (err) {
+						} catch (err: any) {
 							reject(err)
 						}
 					})
 					.catch(err => {
 						reject(err)
 					})
-			} catch (err) {
+			} catch (err: any) {
 				reject(err)
 			}
 		})
@@ -390,7 +390,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 			}
 
 			return await this.getTabIndex(index, options)
-		} catch (err) {
+		} catch (err: any) {
 			console.warn('BrowserExt: ' + err.message || err)
 			return {
 				tab: null,
@@ -473,7 +473,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 					})
 					resolve(tabItems)
 				})
-			} catch (err) {
+			} catch (err: any) {
 				reject(err)
 			}
 		})
@@ -511,7 +511,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 						list.map(cb => {
 							cb(tab, tabInfo)
 						})
-					} catch (err) {
+					} catch (err: any) {
 						//
 					}
 				})
@@ -588,7 +588,7 @@ export class Tabs extends EventEmitter implements iTabs, EventEmitter {
 					list.map(cb => {
 						cb(tab, tabInfo)
 					})
-				} catch (err) {
+				} catch (err: any) {
 					//
 				}
 			})

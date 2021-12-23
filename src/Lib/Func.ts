@@ -50,7 +50,7 @@ export const encryptValue = async (id: string | number, param: any): Promise<Obj
 	let cryptKey = Hash('sha256', Math.random() + Date.now())
 	try {
 		await storage.save(`blockdata:${id}`, cryptKey)
-	} catch (err) {
+	} catch (err: any) {
 		throw err
 	}
 
@@ -85,7 +85,7 @@ export const decryptValue = async (id: string | number, data: any): Promise<Obje
 	let cryptKey: string | null = null
 	try {
 		cryptKey = await storage.loadRemove(`blockdata:${id}`)
-	} catch (err) {
+	} catch (err: any) {
 		throw err
 	}
 
@@ -103,10 +103,10 @@ export const decryptValue = async (id: string | number, data: any): Promise<Obje
 			let val = decryptData(v as string, cryptKey)
 			try {
 				deData[k] = JSON.parse(val)
-			} catch (err) {
+			} catch (err: any) {
 				deData[k] = val
 			}
-		} catch (err) {
+		} catch (err: any) {
 			deData[k] = v
 		}
 	}

@@ -287,7 +287,7 @@ export class windowMsg
 					})
 				}, this.__timeout__)
 			}
-		} catch (err) {
+		} catch (err: any) {
 			throw err
 		}
 	}

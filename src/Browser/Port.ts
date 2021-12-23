@@ -204,7 +204,7 @@ export class Port implements iPort {
 				method: method,
 				param: data,
 			})
-		} catch (err) {
+		} catch (err: any) {
 			throw err
 		}
 	}
@@ -276,7 +276,7 @@ export class Port implements iPort {
 				const encryptDataCallback = async () => {
 					try {
 						data = await decryptValue(_id || 0, _data)
-					} catch (err) {
+					} catch (err: any) {
 						throw err
 					}
 

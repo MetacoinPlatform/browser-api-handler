@@ -278,13 +278,13 @@ export class Notify implements iNotify {
 	 *
 	 * @return Promise - notification ID를 반환합니다.
 	 */
-	create(id: string, options: chrome.notifications.NotificationOptions = {}): Promise<string> {
+	create(id: string, options: chrome.notifications.NotificationOptions<true>): Promise<string> {
 		if (!this.notify) {
 			throw createResult(ENUM_STATUS.ERROR, 'Not found chrome.notifications.')
 		}
 
 		return new Promise(resolve => {
-			let notifyOption = Object.assign({}, options)
+			let notifyOption = options
 			if (this.notifyMap[id]) {
 				if (this.notifyMap[id].options) {
 					notifyOption = Object.assign(notifyOption, this.notifyMap[id].options)
